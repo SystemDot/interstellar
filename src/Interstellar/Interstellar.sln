@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33110.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interstellar", "Interstellar\Interstellar.csproj", "{CA3A8F14-4C1A-4809-9461-FEED433F5B18}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interstellar.TestApp", "..\..\tests\Interstellar.TestApp\Interstellar.TestApp.csproj", "{65AE1F2F-9F58-4E1B-A3B7-49B5DC2B30A1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CA3A8F14-4C1A-4809-9461-FEED433F5B18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA3A8F14-4C1A-4809-9461-FEED433F5B18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA3A8F14-4C1A-4809-9461-FEED433F5B18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA3A8F14-4C1A-4809-9461-FEED433F5B18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65AE1F2F-9F58-4E1B-A3B7-49B5DC2B30A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65AE1F2F-9F58-4E1B-A3B7-49B5DC2B30A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65AE1F2F-9F58-4E1B-A3B7-49B5DC2B30A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65AE1F2F-9F58-4E1B-A3B7-49B5DC2B30A1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {17B42EF9-5161-41D6-9B2B-F23987171310}
+	EndGlobalSection
+EndGlobal
