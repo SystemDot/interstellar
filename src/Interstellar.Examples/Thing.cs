@@ -1,8 +1,8 @@
 ﻿using Interstellar.Domain;
 using Interstellar.Domain.Configuration;
-using Interstellar.TestApp.Messages;
+using Interstellar.Examples.Messages;
 
-namespace Interstellar.TestApp;
+namespace Interstellar.Examples;
 
 public class Thing : AggregateRoot
 {

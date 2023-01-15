@@ -1,4 +1,4 @@
-﻿namespace Interstellar.TestApp.Messages;
+﻿namespace Interstellar.Examples.Messages;
 
 public class WotsitMade
 {

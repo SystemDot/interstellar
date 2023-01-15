@@ -1,4 +1,4 @@
-﻿namespace Interstellar.TestApp;
+﻿namespace Interstellar.Examples;
 
 public class User
 {
