@@ -1,23 +1,26 @@
 ﻿using Interstellar.Domain;
-using Interstellar.Domain.Bootstrapping;
+using Interstellar.Domain.Configuration;
+using Interstellar.TestApp.Messages;
+
+namespace Interstellar.TestApp;
 
 public class Thing : AggregateRoot
 {
-    public static void Bootstrap()
+    public static void Configure(DomainConfiguration configuration)
     {
-        DomainBootstrapping
+        configuration
             .Route<CreateOrModifyThing>()
-            .ToAggregate<Thing>()
+            .ToAggregate(() => new Thing())
             .ForId(command => $"{nameof(Thing)}-{command.Id}");
     }
 
-    public Thing()
+    private Thing()
     {
         On<ThingCreated>().Become(Created);
         NotCreated();
     }
 
-    public void NotCreated()
+    private void NotCreated()
     {
         When<CreateOrModifyThing>().Then(command =>
             new ThingCreated(
@@ -26,7 +29,7 @@ public class Thing : AggregateRoot
                 command.Description));
     }
 
-    public void Created()
+    private void Created()
     {
         When<CreateOrModifyThing>().Then(command =>
             new ThingModified(

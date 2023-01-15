@@ -1,12 +1,12 @@
-﻿using Interstellar.Messaging;
+﻿namespace Interstellar.TestApp.Messages;
 
-public class CreateOrModifyThing : ICommand
+public class ThingModified
 {
     public Guid Id { get; }
     public string Name { get; }
     public string Description { get; }
 
-    public CreateOrModifyThing(Guid id, string name, string description)
+    public ThingModified(Guid id, string name, string description)
     {
         Id = id;
         Name = name;

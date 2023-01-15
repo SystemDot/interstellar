@@ -1,5 +1,4 @@
-﻿using Interstellar.Messaging;
-
+﻿
 namespace Interstellar.Domain
 {
 
@@ -10,19 +9,17 @@ namespace Interstellar.Domain
     {
         protected TState State { get; }
 
-        protected StatusChangeOptions On<TEvent>() where TEvent : IEvent
+        protected StatusChangeOptions On<TEvent>()
         {
             return new StatusChangeOptions();
         }
 
         protected WhenActions<TCommand> When<TCommand>()
-            where TCommand : ICommand
         {
             return new WhenActions<TCommand>();
         }
 
         protected void Then<TEvent>(TEvent @event)
-            where TEvent : IEvent
         {
 
         }
