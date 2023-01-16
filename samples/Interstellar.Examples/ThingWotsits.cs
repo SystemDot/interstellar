@@ -10,11 +10,11 @@ public class ThingWotsits : AggregateRoot
         configuration
             .ForAggregate<ThingWotsits>()
                 .ReceiveCommand<StartWotsit>(command => command.Id.ToThingWotsitStreamId())
-                    .JoinWithOtherStreams(command => command.Id.ToThingStreamId())
+                    .JoinWithOtherStreams(command => command.ThingId.ToThingStreamId())
                 .ReceiveCommand<MakeWotsit>(command => command.Id.ToThingWotsitStreamId())
-                    .JoinWithOtherStreams(command => command.Id.ToThingStreamId())
+                    .JoinWithOtherStreams(command => command.ThingId.ToThingStreamId())
                 .ReceiveCommand<DestroyWotsit>(command => command.Id.ToThingWotsitStreamId())
-                    .JoinWithOtherStreams(command => command.Id.ToThingStreamId());
+                    .JoinWithOtherStreams(command => command.ThingId.ToThingStreamId());
     }
 
     private readonly UserService userService;
@@ -38,7 +38,7 @@ public class ThingWotsits : AggregateRoot
     {
         When<StartWotsit>().DoAsync(async command =>
         {
-            var currentUser = await userService.GetCurrentUserAsync();
+            User currentUser = await userService.GetCurrentUserAsync();
             Then(new WotsitStarted(command.ThingId, currentUser.Id, DateTime.UtcNow));
         });
     }
@@ -47,7 +47,7 @@ public class ThingWotsits : AggregateRoot
     {
         When<MakeWotsit>().DoAsync(async command =>
         {
-            var currentUser = await userService.GetCurrentUserAsync();
+            User currentUser = await userService.GetCurrentUserAsync();
             Then(new WotsitMade(command.ThingId, currentUser.Id, DateTime.UtcNow, command.Cost));
         });
     }
@@ -56,7 +56,7 @@ public class ThingWotsits : AggregateRoot
     {
         When<DestroyWotsit>().DoAsync(async command =>
         {
-            var currentUser = await userService.GetCurrentUserAsync();
+            User currentUser = await userService.GetCurrentUserAsync();
             Then(new WotsitDestroyed(command.ThingId, currentUser.Id, DateTime.UtcNow));
         });
     }

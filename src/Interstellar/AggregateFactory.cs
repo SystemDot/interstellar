@@ -12,9 +12,7 @@ namespace Interstellar
             this.resolver = resolver;
         }
 
-        public TAggregate CreateAggregate<TAggregate>() where TAggregate : AggregateRoot
-        {
-            return resolver.GetService<TAggregate>()!;
-        }
+        public TAggregate CreateAggregate<TAggregate>() where TAggregate : AggregateRoot =>
+            resolver.GetService<TAggregate>()!;
     }
 }

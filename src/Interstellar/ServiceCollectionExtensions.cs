@@ -12,8 +12,8 @@ namespace Interstellar
         {
             services.AddSingleton<IServiceProvider>(sp => sp);
             services.AddSingleton<AggregateFactory>();
-            services.AddSingleton<AggregateLoader>();
-            services.AddSingleton<CommandDeliverer>();
+            services.AddSingleton<EventStreamLoader>();
+            services.AddSingleton<DomainCommandDeliverer>();
 
             var domainConfiguration = new DomainConfiguration(services);
             configureAction(domainConfiguration);

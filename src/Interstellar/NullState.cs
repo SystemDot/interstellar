@@ -1,7 +1,7 @@
 ﻿namespace Interstellar
 {
 
-    public class NullState : AggregateRootState
+    public class NullState : AggregateState
     {
     }
 }

@@ -24,8 +24,13 @@ namespace Interstellar
 
         public AggregateResolution Resolve(object command, AggregateFactory aggregateFactory)
         {
-            TAggregate aggregateRoot = aggregateFactory.CreateAggregate<TAggregate>();
-            var streamIds = streamIdFactories.Select(f => f((command as TCommand)!));
+            var aggregateRoot = aggregateFactory.CreateAggregate<TAggregate>();
+
+            IEnumerable<string> streamIds = streamIdFactories
+                .Select(f => f((command as TCommand)!))
+                .ToArray();
+
+            aggregateRoot.StreamId = streamIds.First();
 
             return new AggregateResolution(aggregateRoot, streamIds);
         }
