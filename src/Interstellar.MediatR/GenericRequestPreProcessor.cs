@@ -4,10 +4,16 @@ namespace Interstellar.MediatR
 {
     public class GenericRequestPreProcessor<TRequest> : IRequestPreProcessor<TRequest>
     {
+        private readonly CommandDeliverer deliverer;
+
+        public GenericRequestPreProcessor(CommandDeliverer deliverer)
+        {
+            this.deliverer = deliverer;
+        }
+
         public Task Process(TRequest request, CancellationToken cancellationToken)
         {
-            Console.WriteLine($"pre proc {request.GetType().Name}");
-            return Task.CompletedTask;
+            return deliverer.DeliverCommandAsync(request);
         }
     }
 }

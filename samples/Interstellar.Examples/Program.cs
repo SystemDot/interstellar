@@ -20,7 +20,7 @@ public static class Program
     {
         var services = new ServiceCollection();
 
-        var provider = services
+        ServiceProvider provider = services
             .AddMediatR(Assembly.GetExecutingAssembly())
             .AddInterstellar(configuration =>
             {

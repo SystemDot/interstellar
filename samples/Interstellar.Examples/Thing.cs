@@ -12,7 +12,7 @@ public class Thing : AggregateRoot
             .ReceiveCommand<CreateOrModifyThing>(command => command.Id.ToThingStreamId());
     }
 
-    private Thing()
+    public Thing()
     {
         On<ThingCreated>().Become(Created);
         NotCreated();

@@ -10,6 +10,14 @@ namespace Interstellar
             this IServiceCollection services,
             Action<DomainConfiguration> configureAction)
         {
+            services.AddSingleton<IServiceProvider>(sp => sp);
+            services.AddSingleton<AggregateFactory>();
+            services.AddSingleton<AggregateLoader>();
+            services.AddSingleton<CommandDeliverer>();
+
+            var domainConfiguration = new DomainConfiguration(services);
+            configureAction(domainConfiguration);
+
             return services;
         }
     }

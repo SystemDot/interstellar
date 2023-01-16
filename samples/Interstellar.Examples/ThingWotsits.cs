@@ -19,7 +19,7 @@ public class ThingWotsits : AggregateRoot
 
     private readonly UserService userService;
 
-    private ThingWotsits(UserService userService)
+    public ThingWotsits(UserService userService)
     {
         this.userService = userService;
 
