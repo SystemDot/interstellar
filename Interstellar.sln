@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interstellar", "src\Interstellar\Interstellar\Interstellar.csproj", "{CA3A8F14-4C1A-4809-9461-FEED433F5B18}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interstellar", ".\src\Interstellar\Interstellar.csproj", "{454FB4F6-1796-400D-9F28-7389BCAB8619}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interstellar.TestApp", "tests\Interstellar.TestApp\Interstellar.TestApp.csproj", "{65AE1F2F-9F58-4E1B-A3B7-49B5DC2B30A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interstellar.Examples", ".\samples\Interstellar.Examples\Interstellar.Examples.csproj", "{676C1234-3169-4EA8-9D46-87DDE551AA27}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interstellar.MediatR", ".\src\Interstellar.MediatR\Interstellar.MediatR.csproj", "{3C2F7D92-B672-434E-83CE-47FF3D306EB3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,19 +15,23 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{CA3A8F14-4C1A-4809-9461-FEED433F5B18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CA3A8F14-4C1A-4809-9461-FEED433F5B18}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CA3A8F14-4C1A-4809-9461-FEED433F5B18}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CA3A8F14-4C1A-4809-9461-FEED433F5B18}.Release|Any CPU.Build.0 = Release|Any CPU
-		{65AE1F2F-9F58-4E1B-A3B7-49B5DC2B30A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{65AE1F2F-9F58-4E1B-A3B7-49B5DC2B30A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{65AE1F2F-9F58-4E1B-A3B7-49B5DC2B30A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{65AE1F2F-9F58-4E1B-A3B7-49B5DC2B30A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{454FB4F6-1796-400D-9F28-7389BCAB8619}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{454FB4F6-1796-400D-9F28-7389BCAB8619}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{454FB4F6-1796-400D-9F28-7389BCAB8619}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{454FB4F6-1796-400D-9F28-7389BCAB8619}.Release|Any CPU.Build.0 = Release|Any CPU
+		{676C1234-3169-4EA8-9D46-87DDE551AA27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{676C1234-3169-4EA8-9D46-87DDE551AA27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{676C1234-3169-4EA8-9D46-87DDE551AA27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{676C1234-3169-4EA8-9D46-87DDE551AA27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C2F7D92-B672-434E-83CE-47FF3D306EB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C2F7D92-B672-434E-83CE-47FF3D306EB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C2F7D92-B672-434E-83CE-47FF3D306EB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C2F7D92-B672-434E-83CE-47FF3D306EB3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {17B42EF9-5161-41D6-9B2B-F23987171310}
+		SolutionGuid = {4351BF7C-6733-4DB6-8EC7-5B1141D2F748}
 	EndGlobalSection
 EndGlobal
