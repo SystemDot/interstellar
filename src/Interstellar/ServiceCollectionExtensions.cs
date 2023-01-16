@@ -1,8 +1,8 @@
 ﻿using System;
-using Interstellar.Domain.Configuration;
+using Interstellar.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Interstellar.Domain
+namespace Interstellar
 {
     public static class ServiceCollectionExtensions
     {

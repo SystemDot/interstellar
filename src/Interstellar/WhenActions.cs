@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Interstellar.Domain
+namespace Interstellar
 {
 
     public class WhenActions<TCommand>

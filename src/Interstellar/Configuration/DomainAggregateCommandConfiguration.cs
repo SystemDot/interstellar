@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Interstellar.Domain.Configuration
+namespace Interstellar.Configuration
 {
     public class DomainAggregateCommandConfiguration<TAggregate, TCommand> : DomainAggregateConfiguration<TAggregate>
         where TAggregate : AggregateRoot

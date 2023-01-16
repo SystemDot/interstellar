@@ -1,4 +1,4 @@
-﻿namespace Interstellar.Domain
+﻿namespace Interstellar
 {
 
     public class AggregateRootState

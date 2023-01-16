@@ -1,5 +1,5 @@
 ﻿
-namespace Interstellar.Domain
+namespace Interstellar
 {
 
     public abstract class AggregateRoot : AggregateRoot<NullState>

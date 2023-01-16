@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Interstellar.Domain
+namespace Interstellar
 {
 
     public abstract class Projection<TEvent>

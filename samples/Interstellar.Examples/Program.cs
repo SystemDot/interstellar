@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using Interstellar.Domain;
+using Interstellar;
 using Interstellar.Examples;
 using Interstellar.Examples.Messages;
 using Interstellar.MediatR;

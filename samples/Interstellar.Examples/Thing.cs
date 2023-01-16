@@ -1,5 +1,4 @@
-﻿using Interstellar.Domain;
-using Interstellar.Domain.Configuration;
+﻿using Interstellar.Configuration;
 using Interstellar.Examples.Messages;
 
 namespace Interstellar.Examples;

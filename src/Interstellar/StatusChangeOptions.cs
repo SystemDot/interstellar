@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Interstellar.Domain
+namespace Interstellar
 {
 
     public class StatusChangeOptions

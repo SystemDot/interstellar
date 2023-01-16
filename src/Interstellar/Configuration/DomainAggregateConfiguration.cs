@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace Interstellar.Domain.Configuration
+namespace Interstellar.Configuration
 {
     public class DomainAggregateConfiguration<TAggregate> : DomainConfiguration
         where TAggregate : AggregateRoot
