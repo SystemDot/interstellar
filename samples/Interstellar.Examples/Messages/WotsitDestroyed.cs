@@ -1,6 +1,6 @@
 ﻿namespace Interstellar.Examples.Messages;
 
-public class WotsitDestroyed
+public class WotsitDestroyed : IEvent
 {
     public Guid ThingId { get; }
     public Guid UserId { get; }

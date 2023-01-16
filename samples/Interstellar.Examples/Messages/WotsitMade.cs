@@ -1,6 +1,6 @@
 ﻿namespace Interstellar.Examples.Messages;
 
-public class WotsitMade
+public class WotsitMade : IEvent
 {
     public Guid ThingId { get; }
     public Guid UserId { get; }

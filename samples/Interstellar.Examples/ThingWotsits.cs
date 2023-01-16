@@ -6,18 +6,16 @@ namespace Interstellar.Examples;
 
 public class ThingWotsits : AggregateRoot
 {
-    public static void Configure(DomainConfiguration configuration, UserService userService)
+    public static void Configure(DomainConfiguration configuration)
     {
         configuration
-            .Route<StartWotsit>()
-                .ToAggregate(() => new ThingWotsits(userService))
-                .ForId(command => $"{nameof(Thing)}-{command.Id}")
-            .Route<MakeWotsit>()
-                .ToAggregate(() => new ThingWotsits(userService))
-                .ForId(command => $"{nameof(Thing)}-{command.Id}")
-            .Route<DestroyWotsit>()
-                .ToAggregate(() => new ThingWotsits(userService))
-                .ForId(command => $"{nameof(ThingWotsits)}-{command.Id}");
+            .ForAggregate<ThingWotsits>()
+                .ReceiveCommand<StartWotsit>(command => command.Id.ToThingWotsitStreamId())
+                    .JoinWithOtherStreams(command => command.Id.ToThingStreamId())
+                .ReceiveCommand<MakeWotsit>(command => command.Id.ToThingWotsitStreamId())
+                    .JoinWithOtherStreams(command => command.Id.ToThingStreamId())
+                .ReceiveCommand<DestroyWotsit>(command => command.Id.ToThingWotsitStreamId())
+                    .JoinWithOtherStreams(command => command.Id.ToThingStreamId());
     }
 
     private readonly UserService userService;

@@ -1,15 +1,13 @@
 ﻿namespace Interstellar.Examples.Messages;
 
-public class MakeWotsit
+public class StartWotsit : ICommand
 {
     public Guid Id { get;  }
     public Guid ThingId { get;  }
-    public decimal Cost { get;  }
 
-    public MakeWotsit(Guid id, Guid thingId, decimal cost)
+    public StartWotsit(Guid id, Guid thingId)
     {
         Id = id;
         ThingId = thingId;
-        Cost = cost;
     }
 }

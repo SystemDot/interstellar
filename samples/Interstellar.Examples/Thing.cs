@@ -9,9 +9,8 @@ public class Thing : AggregateRoot
     public static void Configure(DomainConfiguration configuration)
     {
         configuration
-            .Route<CreateOrModifyThing>()
-            .ToAggregate(() => new Thing())
-            .ForId(command => $"{nameof(Thing)}-{command.Id}");
+            .ForAggregate<Thing>()
+            .ReceiveCommand<CreateOrModifyThing>(command => command.Id.ToThingStreamId());
     }
 
     private Thing()
