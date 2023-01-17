@@ -1,6 +1,6 @@
-﻿using Microsoft.Azure.Cosmos;
+﻿namespace Interstellar.Examples.Cosmos;
 
-namespace Interstellar.Examples;
+using Microsoft.Azure.Cosmos;
 
 public class CosmosDatabaseProvider
 {
@@ -14,7 +14,7 @@ public class CosmosDatabaseProvider
 
     public async Task InitialiseAsync()
     {
-        var client = CosmosConnector.ConnectToCosmos(settings.EndpointUri, settings.PrimaryKey);
+        CosmosClient client = CosmosConnector.ConnectToCosmos(settings.EndpointUri, settings.PrimaryKey);
         database = await client.CreateDatabaseIfNotExistsAsync(settings.Database);
     }
 

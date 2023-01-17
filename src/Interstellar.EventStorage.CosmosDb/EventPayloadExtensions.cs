@@ -2,16 +2,14 @@
 
 public static class EventPayloadExtensions
 {
-    public static EventPayloadDataItem ToEventPayloadDataItem(this EventPayload eventPayload)
-    {
-        return new EventPayloadDataItem
+    public static EventPayloadDataItem ToEventPayloadDataItem(this EventPayload eventPayload) =>
+        new()
         {
             Id = eventPayload.Id.ToString(),
             StreamId = eventPayload.StreamId,
             EventIndex = eventPayload.EventIndex,
-            EventTypeName = eventPayload.EventBody.GetType().AssemblyQualifiedName!,
+            EventTypeName = eventPayload.EventBody.GetType().Name!,
             EventBody = eventPayload.EventBody.ToJson(),
             CreatedOn = eventPayload.CreatedOn
         };
-    }
 }

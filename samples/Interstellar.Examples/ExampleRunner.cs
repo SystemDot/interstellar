@@ -1,22 +1,18 @@
-﻿using Interstellar;
-using Interstellar.Examples;
-using Interstellar.Examples.Messages;
+﻿using Interstellar.Examples.Messages;
+
+namespace Interstellar.Examples;
 
 public class ExampleRunner
 {
-    private readonly CosmosDatabaseProvider databaseProvider;
     private readonly DomainCommandDeliverer domainCommandDeliverer;
 
-    public ExampleRunner(CosmosDatabaseProvider databaseProvider, DomainCommandDeliverer domainCommandDeliverer)
+    public ExampleRunner(DomainCommandDeliverer domainCommandDeliverer)
     {
-        this.databaseProvider = databaseProvider;
         this.domainCommandDeliverer = domainCommandDeliverer;
     }
 
     public async Task RunAsync()
     {
-        await databaseProvider.InitialiseAsync();
-
         var thingId = Guid.NewGuid();
 
         await domainCommandDeliverer.DeliverCommandAsync(new CreateOrModifyThing(

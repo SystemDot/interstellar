@@ -2,14 +2,13 @@
 
 namespace Interstellar.Examples;
 
+using Interstellar.Examples.Cosmos;
+
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddInterstellarExamples(
-        this IServiceCollection services,
-        CosmosDbSettings cosmosDbSettings)
+    public static IServiceCollection AddInterstellarExamples(this IServiceCollection services)
     {
-        return services.AddSingleton(cosmosDbSettings!)
-            .AddSingleton<CosmosDatabaseProvider>()
+        return services
             .AddSingleton<IEventDeliverer, MediatREventDeliverer>()
             .AddSingleton<UserService>()
             .AddSingleton<ExampleRunner>();

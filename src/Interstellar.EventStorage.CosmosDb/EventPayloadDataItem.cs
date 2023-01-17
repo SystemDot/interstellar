@@ -6,15 +6,11 @@ namespace Interstellar.EventStorage.CosmosDb;
 public class EventPayloadDataItem
 {
     [JsonProperty(PropertyName = "id")]
-    public string Id { get; set; }
+    public string Id { get; set; } = null!;
 
-    public string StreamId { get; set; }
-        
-    public long EventIndex { get; set; }
-        
-    public string EventTypeName { get; set; }
-        
-    public JObject EventBody { get; set; }
-
-    public DateTime CreatedOn { set; get; }
+    public string StreamId { get; init; } = null!;
+    public long EventIndex { get; init; }
+    public string EventTypeName { get; init; } = null!;
+    public JObject EventBody { get; init; } = null!;
+    public DateTime CreatedOn { get; init; }
 }

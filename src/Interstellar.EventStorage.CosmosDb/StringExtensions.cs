@@ -4,8 +4,8 @@ namespace Interstellar.EventStorage.CosmosDb;
 
 public static class StringExtensions
 {
-    public static object FromJson(this JObject from, string eventTypeName)
+    public static object FromJson(this JObject from, Type eventType)
     {
-        return from.ToObject(Type.GetType(eventTypeName));
+        return from.ToObject(eventType);
     }
 }

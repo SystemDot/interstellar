@@ -4,5 +4,5 @@ namespace Interstellar.EventStorage.CosmosDb;
 
 public interface IEventSourcingCosmosContainerProvider
 {
-    Task<Container> ProvideContainerAsync();
+    Task<Container> ProvideContainerAsync(string partitionKey);
 }

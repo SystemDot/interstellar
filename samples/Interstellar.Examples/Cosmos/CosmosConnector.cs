@@ -1,6 +1,6 @@
-﻿using Microsoft.Azure.Cosmos;
+﻿namespace Interstellar.Examples.Cosmos;
 
-namespace Interstellar.Examples;
+using Microsoft.Azure.Cosmos;
 
 public static class CosmosConnector
 {

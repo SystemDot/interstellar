@@ -1,4 +1,4 @@
-﻿namespace Interstellar.Examples;
+﻿namespace Interstellar.Examples.Cosmos;
 
 public class CosmosDatabaseProviderNotInitialisedException : Exception
 {
