@@ -1,6 +1,6 @@
-﻿namespace Interstellar.Examples.Cosmos;
+﻿using Microsoft.Azure.Cosmos;
 
-using Microsoft.Azure.Cosmos;
+namespace Interstellar.Examples.CosmosDb;
 
 public class CosmosDatabaseProvider
 {

@@ -1,7 +1,7 @@
-﻿namespace Interstellar.Examples.Cosmos;
-
-using Interstellar.EventStorage.CosmosDb;
+﻿using Interstellar.EventStorage.CosmosDb;
 using Microsoft.Azure.Cosmos;
+
+namespace Interstellar.Examples.CosmosDb;
 
 public class EventSourcingCosmosContainerProvider : IEventSourcingCosmosContainerProvider
 {

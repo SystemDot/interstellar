@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using Interstellar.EventStorage.CosmosDb;
-using Interstellar.Examples.Cosmos;
 using Interstellar.Examples.Messages;
 using MediatR;
 using Microsoft.Extensions.Configuration;

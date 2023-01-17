@@ -10,38 +10,95 @@ public class CosmosThingProjections :
     INotificationHandler<WotsitMade>,
     INotificationHandler<WotsitDestroyed>
 {
-    public Task Handle(ThingCreated notification, CancellationToken cancellationToken)
+    private readonly CosmosDatabaseProvider databaseProvider;
+
+    public CosmosThingProjections(CosmosDatabaseProvider databaseProvider)
+    {
+        this.databaseProvider = databaseProvider;
+    }
+
+    public async Task Handle(ThingCreated notification, CancellationToken cancellationToken)
     {
         Console.WriteLine(nameof(ThingCreated));
 
-        return Task.CompletedTask;
+        var container = await new CosmosContainerProvider(databaseProvider, "ThingList")
+            .ProvideContainerAsync("/Type");
+
+        await container.UpsertItemAsync(
+            new ThingListItem
+            {
+                Id = notification.Id,
+                Type = 1,
+                Name = notification.Name,
+            }, 
+            cancellationToken: cancellationToken);
     }
 
-    public Task Handle(ThingModified notification, CancellationToken cancellationToken)
+    public async Task Handle(ThingModified notification, CancellationToken cancellationToken)
     {
         Console.WriteLine(nameof(ThingModified));
 
-        return Task.CompletedTask;
+        var container = await new CosmosContainerProvider(databaseProvider, "ThingList")
+            .ProvideContainerAsync("/Type");
+
+        await container.UpsertItemAsync(
+            new ThingListItem
+            {
+                Id = notification.Id,
+                Type = 1,
+                Name = notification.Name,
+            },
+            cancellationToken: cancellationToken);
     }
 
-    public Task Handle(WotsitStarted notification, CancellationToken cancellationToken)
+    public async Task Handle(WotsitStarted notification, CancellationToken cancellationToken)
     {
         Console.WriteLine(nameof(WotsitStarted));
 
-        return Task.CompletedTask;
+        var container = await new CosmosContainerProvider(databaseProvider, "WotsitActivity")
+            .ProvideContainerAsync("/ThingId");
+
+        await container.UpsertItemAsync(
+            new WotsitActivity
+            {
+                Id = Guid.NewGuid(),
+                ThingId = notification.ThingId,
+                State = "Started",
+            },
+            cancellationToken: cancellationToken);
     }
 
-    public Task Handle(WotsitMade notification, CancellationToken cancellationToken)
+    public async Task Handle(WotsitMade notification, CancellationToken cancellationToken)
     {
         Console.WriteLine(nameof(WotsitMade));
 
-        return Task.CompletedTask;
+        var container = await new CosmosContainerProvider(databaseProvider, "WotsitActivity")
+            .ProvideContainerAsync("/ThingId");
+
+        await container.UpsertItemAsync(
+            new WotsitActivity
+            {
+                Id = Guid.NewGuid(),
+                ThingId = notification.ThingId,
+                State = "Made",
+            },
+            cancellationToken: cancellationToken);
     }
 
-    public Task Handle(WotsitDestroyed notification, CancellationToken cancellationToken)
+    public async Task Handle(WotsitDestroyed notification, CancellationToken cancellationToken)
     {
         Console.WriteLine(nameof(WotsitDestroyed));
 
-        return Task.CompletedTask;
+        var container = await new CosmosContainerProvider(databaseProvider, "WotsitActivity")
+            .ProvideContainerAsync("/ThingId");
+
+        await container.UpsertItemAsync(
+            new WotsitActivity
+            {
+                Id = Guid.NewGuid(),
+                ThingId = notification.ThingId,
+                State = "Destroyed",
+            },
+            cancellationToken: cancellationToken);
     }
 }
