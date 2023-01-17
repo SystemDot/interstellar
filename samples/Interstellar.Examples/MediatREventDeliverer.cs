@@ -1,6 +1,6 @@
-﻿namespace Interstellar.MediatR;
+﻿using MediatR;
 
-using global::MediatR;
+namespace Interstellar.Examples;
 
 public class MediatREventDeliverer : IEventDeliverer
 {
@@ -11,5 +11,5 @@ public class MediatREventDeliverer : IEventDeliverer
         this.mediator = mediator;
     }
 
-    public Task DeliverAsync(EventPayload eventPayload) => mediator.Publish(eventPayload.Body);
+    public Task DeliverAsync(EventPayload eventPayload) => mediator.Publish(eventPayload.EventBody);
 }

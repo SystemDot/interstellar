@@ -4,14 +4,16 @@
 
     public class EventPayload
     {
+        public Guid Id { get; }
         public string StreamId { get; }
         public long EventIndex { get; }
-        public object Body { get; }
+        public object EventBody { get; }
         public DateTime CreatedOn { get; }
 
-        public EventPayload(string streamId, long eventIndex, object body, DateTime createdOn)
+        public EventPayload(Guid id, string streamId, long eventIndex, object eventBody, DateTime createdOn)
         {
-            Body = body;
+            Id = id;
+            EventBody = eventBody;
             StreamId = streamId;
             EventIndex = eventIndex;
             CreatedOn = createdOn;

@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interstellar.Examples", "sa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interstellar.EventStorage.InMemory", "src\Interstellar.EventStorage.InMemory\Interstellar.EventStorage.InMemory.csproj", "{C40483C1-7C17-4555-8AB5-8D7808111EE2}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interstellar.EventStorage.CosmosDb", "src\Interstellar.EventStorage.CosmosDb\Interstellar.EventStorage.CosmosDb.csproj", "{CE813761-B070-48B6-8436-6ADCC36ABD34}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{C40483C1-7C17-4555-8AB5-8D7808111EE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C40483C1-7C17-4555-8AB5-8D7808111EE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C40483C1-7C17-4555-8AB5-8D7808111EE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE813761-B070-48B6-8436-6ADCC36ABD34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE813761-B070-48B6-8436-6ADCC36ABD34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE813761-B070-48B6-8436-6ADCC36ABD34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE813761-B070-48B6-8436-6ADCC36ABD34}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

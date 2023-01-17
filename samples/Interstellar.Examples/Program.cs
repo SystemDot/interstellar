@@ -1,32 +1,40 @@
 ﻿using System.Reflection;
-using Interstellar;
-using Interstellar.EventStorage.InMemory;
-using Interstellar.Examples;
-using Interstellar.MediatR;
+using Interstellar.EventStorage.CosmosDb;
 using MediatR;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
+namespace Interstellar.Examples;
 
 public static class Program
 {
+    const string CosmosDb = nameof(CosmosDb);
+
     public static Task Main(string[] args) => Build().RunAsync();
 
     private static ExampleRunner Build()
     {
-        var services = new ServiceCollection();
-
-        ServiceProvider provider = services
+        var config = GetConfig();
+        var cosmosDbSettings = config.GetSection(CosmosDb).Get<CosmosDbSettings>();
+        
+        ServiceProvider provider = new ServiceCollection()
+            .AddMediatR(Assembly.GetExecutingAssembly())
             .AddInterstellar(configuration =>
             {
                 Thing.Configure(configuration);
                 ThingWotsits.Configure(configuration);
             })
-            .AddInterstellarInMemoryEventStorage()
-            .AddMediatR(Assembly.GetExecutingAssembly())
-            .AddSingleton<IEventDeliverer, MediatREventDeliverer>()
-            .AddSingleton<UserService>()
-            .AddSingleton<ExampleRunner>()
+            .AddInterstellarCosmosDbEventStorage<EventSourcingCosmosContainerProvider>()
+            .AddInterstellarExamples(cosmosDbSettings!)
             .BuildServiceProvider();
 
         return provider.GetRequiredService<ExampleRunner>();
+    }
+
+    private static IConfigurationRoot GetConfig()
+    {
+        return new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .Build();
     }
 }

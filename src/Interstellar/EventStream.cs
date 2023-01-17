@@ -12,7 +12,7 @@
         {
         }
 
-        private EventStream(IEnumerable<EventPayload> events)
+        public EventStream(IEnumerable<EventPayload> events)
         {
             Events = events;
             currentEventIndex = Events.LastOrDefault()?.EventIndex ?? -1;

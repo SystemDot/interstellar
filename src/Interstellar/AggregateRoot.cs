@@ -45,7 +45,7 @@ namespace Interstellar
         private void ReplayEvent(EventPayload toReplay)
         {
             State.ReplayEvent(toReplay);
-            RunBecome(toReplay.Body);
+            RunBecome(toReplay.EventBody);
         }
 
         private void RunBecome(object @event)

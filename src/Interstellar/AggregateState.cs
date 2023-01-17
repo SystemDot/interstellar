@@ -11,7 +11,7 @@
 
         internal void ReplayEvent(EventPayload toReplay)
         {
-            eventRouter.RouteEventToHandlers(toReplay.Body);
+            eventRouter.RouteEventToHandlers(toReplay.EventBody);
         }
     }
 }
