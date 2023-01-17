@@ -7,7 +7,7 @@ public class EventSourcingCosmosContainerProvider : IEventSourcingCosmosContaine
 {
     private readonly CosmosContainerProvider inner;
 
-    public EventSourcingCosmosContainerProvider(CosmosDbSettings settings, CosmosDatabaseProvider databaseProvider)
+    public EventSourcingCosmosContainerProvider(CosmosDatabaseProvider databaseProvider)
     {
         inner = new CosmosContainerProvider(databaseProvider, "EventStore");
     }

@@ -1,9 +1,9 @@
-﻿namespace Interstellar.Examples;
+﻿using Interstellar.Examples.Messages;
+using MediatR;
 
-using global::MediatR;
-using Interstellar.Examples.Messages;
+namespace Interstellar.Examples.InMemory;
 
-public class ThingProjections : 
+public class InMemoryThingProjections : 
     INotificationHandler<ThingCreated>,
     INotificationHandler<ThingModified>,
     INotificationHandler<WotsitStarted>,

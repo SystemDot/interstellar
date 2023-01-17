@@ -2,24 +2,33 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
+
+    public static class UseMessageTypes
+    {
+        public static UseMessageTypesThatImplement<TImplement> ThatImplement<TImplement>() => 
+            new UseMessageTypesThatImplement<TImplement>();
+    }
+
+    public class UseMessageTypesThatImplement<TImplement>
+    {
+        public UseMessageTypesThatImplementAndFromAssemblyOf<TImplement, TAssemblyOf> FromAssemblyContaining<TAssemblyOf>() => 
+            new UseMessageTypesThatImplementAndFromAssemblyOf<TImplement, TAssemblyOf>();
+    }
+
+    public class UseMessageTypesThatImplementAndFromAssemblyOf<TImplement, TAssemblyOf> : UseMessageTypesThatImplement<TImplement>
+    {
+        public MessageNameTypeLookup Build() => 
+            MessageNameTypeLookup.FromTypes(typeof(TAssemblyOf).FromSameAssemblyWhereImplements<TImplement>());
+    }
 
     public class MessageNameTypeLookup
     {
-        public static MessageNameTypeLookup FromTypesFromAssemblyContainingAndImplements<TAssemblyOf, TImplements>() =>
-            new MessageNameTypeLookup(typeof(TAssemblyOf)
-                .FromSameAssemblyWhereImplements<TImplements>());
-
-        public MessageNameTypeLookup AndFromTypesFromAssemblyContainingAndImplements<TAssemblyOf, TImplements>() =>
-            new MessageNameTypeLookup(inner.Values.Concat(typeof(TAssemblyOf)
-                .FromSameAssemblyWhereImplements<TImplements>()));
-
         private readonly Dictionary<string, Type> inner;
 
-        private MessageNameTypeLookup(IEnumerable<Type> messageTypes)
+        public static MessageNameTypeLookup FromTypes(IEnumerable<Type> messageTypes)
         {
-            inner = new Dictionary<string, Type>();
-            
+            var inner = new Dictionary<string, Type>();
+
             foreach (Type messageType in messageTypes)
             {
                 if (inner.ContainsKey(messageType.Name))
@@ -29,7 +38,15 @@
 
                 inner.Add(messageType.Name, messageType);
             }
+
+            return new MessageNameTypeLookup(inner);
         }
+
+        private MessageNameTypeLookup(Dictionary<string, Type> inner)
+        {
+            this.inner = inner;
+        }
+
 
         public Type Lookup(string messageName)
         {

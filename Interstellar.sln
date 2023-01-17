@@ -11,6 +11,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interstellar.EventStorage.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interstellar.Examples", "samples\Interstellar.Examples\Interstellar.Examples.csproj", "{54BFB7E0-9AD2-48EA-BF83-7689825564FA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{FDDAB8FD-A266-4230-BA16-B6F7563BED0D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EventStorage", "EventStorage", "{745D2502-11D4-49AD-8469-ECB2C1B31EF4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interstellar.Examples.CosmosDb", "samples\Interstellar.Examples.CosmosDb\Interstellar.Examples.CosmosDb.csproj", "{2CC60F7A-7C87-4276-B252-7F5A5ABA4CC5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interstellar.Examples.InMemory", "samples\Interstellar.Examples.InMemory\Interstellar.Examples.InMemory.csproj", "{98F67345-5FAD-40CA-8324-97C36B9BCD8B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,9 +41,24 @@ Global
 		{54BFB7E0-9AD2-48EA-BF83-7689825564FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54BFB7E0-9AD2-48EA-BF83-7689825564FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54BFB7E0-9AD2-48EA-BF83-7689825564FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CC60F7A-7C87-4276-B252-7F5A5ABA4CC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CC60F7A-7C87-4276-B252-7F5A5ABA4CC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CC60F7A-7C87-4276-B252-7F5A5ABA4CC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CC60F7A-7C87-4276-B252-7F5A5ABA4CC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98F67345-5FAD-40CA-8324-97C36B9BCD8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98F67345-5FAD-40CA-8324-97C36B9BCD8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98F67345-5FAD-40CA-8324-97C36B9BCD8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98F67345-5FAD-40CA-8324-97C36B9BCD8B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C40483C1-7C17-4555-8AB5-8D7808111EE2} = {745D2502-11D4-49AD-8469-ECB2C1B31EF4}
+		{CE813761-B070-48B6-8436-6ADCC36ABD34} = {745D2502-11D4-49AD-8469-ECB2C1B31EF4}
+		{54BFB7E0-9AD2-48EA-BF83-7689825564FA} = {FDDAB8FD-A266-4230-BA16-B6F7563BED0D}
+		{2CC60F7A-7C87-4276-B252-7F5A5ABA4CC5} = {FDDAB8FD-A266-4230-BA16-B6F7563BED0D}
+		{98F67345-5FAD-40CA-8324-97C36B9BCD8B} = {FDDAB8FD-A266-4230-BA16-B6F7563BED0D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4351BF7C-6733-4DB6-8EC7-5B1141D2F748}
