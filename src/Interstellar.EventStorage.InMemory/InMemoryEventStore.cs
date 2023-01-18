@@ -1,6 +1,7 @@
 ﻿namespace Interstellar.EventStorage.InMemory
 {
     using System.Collections.Concurrent;
+    using System.IO;
     using System.Threading.Tasks;
 
     public class InMemoryEventStore : IEventStore
@@ -28,17 +29,22 @@
             lock (toStore.StreamId)
             {
                 CreateStreamIfNonExistent(toStore.StreamId);
-                inner[toStore.StreamId] = inner[toStore.StreamId].Append(toStore);
+                var eventStream = inner[toStore.StreamId];
+                CheckExpectedEventIndex(toStore, eventStream.CurrentEventIndex);
+                inner[toStore.StreamId] = eventStream.Append(toStore);
             }
 
-            return DeliverEventsAsync(toStore);
+            return eventDeliverer.DeliverEventsAsync(toStore);
         }
-
-        private async Task DeliverEventsAsync(EventStreamSlice toStore)
+        
+        private void CheckExpectedEventIndex(EventStreamSlice toStore, long expectedIndex)
         {
-            foreach (EventPayload? eventPayload in toStore)
+            if (expectedIndex != toStore.StartIndex)
             {
-                await eventDeliverer.DeliverAsync(eventPayload);
+                throw new ExpectedEventIndexIncorrectException(
+                    toStore.StreamId,
+                    expectedIndex,
+                    toStore.StartIndex);
             }
         }
 

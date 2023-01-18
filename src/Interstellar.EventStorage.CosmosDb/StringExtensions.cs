@@ -1,11 +1,14 @@
-﻿using Newtonsoft.Json.Linq;
-
-namespace Interstellar.EventStorage.CosmosDb;
+﻿namespace Interstellar.EventStorage.CosmosDb;
 
 public static class StringExtensions
 {
-    public static object FromJson(this JObject from, Type eventType)
+    public static string ToImmediateDispatchPositionId(this string from)
     {
-        return from.ToObject(eventType);
+        return $"immediate-dispatch-position-{from}";
+    }
+
+    public static string ToMetaDataId(this string from)
+    {
+        return $"metadata-{from}";
     }
 }

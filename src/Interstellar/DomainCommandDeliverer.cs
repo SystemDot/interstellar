@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Interstellar
@@ -19,7 +20,10 @@ namespace Interstellar
             this.eventStore = eventStore;
         }
 
-        public async Task DeliverCommandAsync<TCommand>(TCommand command)
+        public Task DeliverCommandAsync<TCommand>(TCommand command) =>
+            DeliverCommandAsync(command, 0);
+
+        private async Task DeliverCommandAsync<TCommand>(TCommand command, int attempts)
         {
             AggregateResolution aggregateResolution = AggregateLookupContext
                 .Current
@@ -29,7 +33,20 @@ namespace Interstellar
             IEnumerable<EventPayload> events = await eventStreamLoader.LoadEventsAsync(aggregateResolution.StreamIds);
             aggregateResolution.Aggregate.ReplayEvents(events);
             await aggregateResolution.Aggregate.ReceiveCommandAsync(command);
-            await eventStore.StoreEventsAsync(uow.EventsAdded);
+            
+            try
+            {
+                await eventStore.StoreEventsAsync(uow.EventsAdded);
+            }
+            catch (ExpectedEventIndexIncorrectException)
+            {
+                if (attempts == 3)
+                {
+                    throw;
+                }
+
+                await DeliverCommandAsync(command, ++attempts);
+            }
         }
     }
 }

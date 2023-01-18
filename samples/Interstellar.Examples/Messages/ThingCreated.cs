@@ -1,6 +1,8 @@
-﻿namespace Interstellar.Examples.Messages;
+﻿using MediatR;
 
-public class ThingCreated : IEvent
+namespace Interstellar.Examples.Messages;
+
+public class ThingCreated : INotification
 {
     public Guid Id { get; }
     public string Name { get; }

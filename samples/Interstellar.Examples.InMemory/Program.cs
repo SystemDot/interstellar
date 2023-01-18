@@ -40,7 +40,7 @@ public static class Program
                     ThingWotsits.Configure(configuration);
                 },
                 UseMessageTypes
-                    .ThatImplement<IEvent>()
+                    .ThatImplement<INotification>()
                     .FromAssemblyContaining<CreateOrModifyThing>()
                     .Build())
             .AddInterstellarInMemoryEventStorage()

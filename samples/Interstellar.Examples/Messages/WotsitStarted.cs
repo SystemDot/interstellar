@@ -1,6 +1,8 @@
 ﻿namespace Interstellar.Examples.Messages;
 
-public class WotsitStarted : IEvent
+using MediatR;
+
+public class WotsitStarted : INotification
 {
     public Guid ThingId { get; }
     public Guid UserId { get; }

@@ -8,6 +8,7 @@ public static class ServiceCollectionExtensions
         this IServiceCollection services)
         where TEventSourcingCosmosContainerProvider : class, IEventSourcingCosmosContainerProvider
     {
+        services.AddSingleton<CosmosDatabaseInitialiser>();
         services.AddSingleton<IEventSourcingCosmosContainerProvider, TEventSourcingCosmosContainerProvider>();
         services.AddSingleton<IEventStore, CosmosDbEventStore>();
         return services;

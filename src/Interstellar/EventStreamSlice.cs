@@ -20,7 +20,7 @@
         {
         }
 
-        private EventStreamSlice(string streamId, long startIndex, List<EventPayload> events)
+        private EventStreamSlice(string streamId, long startIndex, IEnumerable<EventPayload> events)
         {
             StreamId = streamId;
             StartIndex = startIndex;
@@ -39,9 +39,12 @@
 
             return new EventStreamSlice(StreamId, StartIndex, events);
         }
-
+        
         public IEnumerator<EventPayload> GetEnumerator() => Events.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        public EventStreamSlice RemoveFirstNumberOfEvents(int numberToRemove) => 
+            new EventStreamSlice(StreamId, StartIndex + numberToRemove, Events.Skip(numberToRemove));
     }
 }

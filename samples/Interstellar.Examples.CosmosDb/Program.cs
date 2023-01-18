@@ -18,6 +18,7 @@ public static class Program
         Console.WriteLine("Initialising");
 
         await serviceProvider.GetRequiredService<CosmosDatabaseProvider>().InitialiseAsync();
+        await serviceProvider.GetRequiredService<CosmosDatabaseInitialiser>().InitialiseAsync();
         while (true)
         {
             Console.WriteLine("Press 1 to run");
@@ -51,7 +52,7 @@ public static class Program
                     ThingWotsits.Configure(configuration);
                 },
                 UseMessageTypes
-                    .ThatImplement<IEvent>()
+                    .ThatImplement<INotification>()
                     .FromAssemblyContaining<CreateOrModifyThing>()
                     .Build())
             .AddInterstellarCosmosDbEventStorage<EventSourcingCosmosContainerProvider>()

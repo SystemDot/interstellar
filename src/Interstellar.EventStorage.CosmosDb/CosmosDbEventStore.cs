@@ -1,13 +1,15 @@
-﻿namespace Interstellar.EventStorage.CosmosDb;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Interstellar.EventStorage.CosmosDb;
 
 using Microsoft.Azure.Cosmos;
-    
+
 public class CosmosDbEventStore : IEventStore
 {
-    private const string PartitionKey = "/StreamId";
     private readonly IEventSourcingCosmosContainerProvider containerProvider;
     private readonly MessageNameTypeLookup messageNameTypeLookup;
     private readonly IEventDeliverer eventDeliverer;
+    private static int ConflictStatusCode = 409;
 
     public CosmosDbEventStore(
         IEventSourcingCosmosContainerProvider containerProvider,
@@ -21,11 +23,56 @@ public class CosmosDbEventStore : IEventStore
 
     public async Task<EventStream> GetEventsAsync(string streamId)
     {
-        Container container = await containerProvider.ProvideContainerAsync(PartitionKey);
-            
-        var queryDefinition = new QueryDefinition($"SELECT * FROM c WHERE c.StreamId = '{streamId}'");
-        FeedIterator<EventPayloadDataItem>? queryResultSetIterator = container.GetItemQueryIterator<EventPayloadDataItem>(queryDefinition);
+        Container container = await GetContainerAsync();
+        var queryResultSetIterator = GetQueryResultSetIterator(streamId, container);
+        var events = await GetEventPayloadsFromQueryIterator(queryResultSetIterator);
+        return new EventStream(events);
+    }
 
+    public async Task StoreEventsAsync(EventStreamSlice toStore)
+    {
+        Container container = await GetContainerAsync();
+        
+        await WriteEventsAsync(toStore, container);
+        await eventDeliverer.DeliverEventsAsync(toStore);
+        await RemoveImmediateDispatchPositionAsync(toStore, container);
+    }
+
+    private static async Task WriteEventsAsync(EventStreamSlice toStore, Container container)
+    {
+        try
+        {
+            var result = await container.Scripts.ExecuteStoredProcedureAsync<int>(
+                StoredProcedures.EventStorage,
+                new PartitionKey(toStore.StreamId),
+                new dynamic[] { toStore.ToEventStreamSliceDataItem() });
+
+            if (result.Resource < toStore.Events.Count())
+            {
+                await WriteEventsAsync(toStore.RemoveFirstNumberOfEvents(result.Resource), container);
+            }
+        }
+        catch (CosmosException e)
+        {
+            if (e.SubStatusCode == ConflictStatusCode)
+            {
+                throw new ExpectedEventIndexIncorrectException(toStore.StreamId, toStore.StartIndex);
+            }
+            throw;
+        }
+    }
+
+    private Task<Container> GetContainerAsync() => 
+        containerProvider.ProvideContainerAsync(PartitionKeys.StreamId);
+
+    private static FeedIterator<EventPayloadDataItem> GetQueryResultSetIterator(string streamId, Container container)
+    {
+        var queryDefinition = new QueryDefinition($"SELECT * FROM c WHERE c.StreamId = '{streamId}'");
+        return container.GetItemQueryIterator<EventPayloadDataItem>(queryDefinition);
+    }
+
+    private async Task<IEnumerable<EventPayload>> GetEventPayloadsFromQueryIterator(FeedIterator<EventPayloadDataItem> queryResultSetIterator)
+    {
         var events = new List<EventPayload>();
 
         while (queryResultSetIterator.HasMoreResults)
@@ -34,38 +81,31 @@ public class CosmosDbEventStore : IEventStore
 
             foreach (EventPayloadDataItem? eventPayloadDataItem in currentResultSet)
             {
-                events.Add(eventPayloadDataItem.ToEventPayload(messageNameTypeLookup));
+                if (Guid.TryParse(eventPayloadDataItem.Id, out _))
+                {
+                    events.Add(eventPayloadDataItem.ToEventPayload(messageNameTypeLookup));
+                }
             }
         }
 
-        return new EventStream(events);
+        return events;
     }
 
-    public async Task StoreEventsAsync(EventStreamSlice toStore)
+    private static async Task RemoveImmediateDispatchPositionAsync(EventStreamSlice toStore, Container container)
     {
-        Container container = await containerProvider.ProvideContainerAsync(PartitionKey);
-
-        var batch = container.CreateTransactionalBatch(new PartitionKey(toStore.StreamId));
-        batch.WriteEventsToStream(toStore);
-        batch.WriteImmediateDispatchPosition(toStore);
-        await batch.ExecuteAsync();
-
-        await DeliverEventsAsync(toStore);
-        await RemoveImmediateDispatchPositionAsync(toStore, container);
-    }
-
-    private async Task DeliverEventsAsync(EventStreamSlice toStore)
-    {
-        foreach (EventPayload? eventPayload in toStore)
+        try
         {
-            await eventDeliverer.DeliverAsync(eventPayload);
+            await container.Scripts.ExecuteStoredProcedureAsync<int>(
+                StoredProcedures.RemoveImmediateDispatchPosition,
+                new PartitionKey(toStore.StreamId),
+                new dynamic[] { toStore.StreamId, toStore.Last().EventIndex });
         }
-    }
-
-    private static Task<ItemResponse<ImmediateDispatchPosition>> RemoveImmediateDispatchPositionAsync(
-        EventStreamSlice toStore,
-        Container container)
-    {
-        return container.DeleteItemAsync<ImmediateDispatchPosition>(toStore.StreamId, new PartitionKey(toStore.StreamId));
+        catch (CosmosException e)
+        {
+            if (e.SubStatusCode != ConflictStatusCode)
+            {
+                throw;
+            }
+        }
     }
 }

@@ -2,13 +2,13 @@
 
 public static class EventStreamSliceExtensions
 {
-    public static ImmediateDispatchPosition ToImmediateDispatchPosition(this EventStreamSlice toStore)
+    public static EventStreamSliceDataItem ToEventStreamSliceDataItem(this EventStreamSlice toStore)
     {
-        return new ImmediateDispatchPosition
+        return new EventStreamSliceDataItem
         {
-            Id = toStore.StreamId,
             StreamId = toStore.StreamId,
-            LastIndexDispatched = toStore.StartIndex,
+            StartIndex = toStore.StartIndex,
+            Events = toStore.Select(eventPayload => eventPayload.ToEventPayloadDataItem()),
         };
     }
 }
