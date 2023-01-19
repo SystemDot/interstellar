@@ -2,13 +2,15 @@
 
 public static class EventStreamSliceExtensions
 {
-    public static EventStreamSliceDataItem ToEventStreamSliceDataItem(this EventStreamSlice toStore)
+    public static EventStreamSliceDataItem ToEventStreamSliceDataItem(this EventStreamSlice toStore, int batchSize)
     {
         return new EventStreamSliceDataItem
         {
             StreamId = toStore.StreamId,
             StartIndex = toStore.StartIndex,
-            Events = toStore.Select(eventPayload => eventPayload.ToEventPayloadDataItem()),
+            Events = toStore
+                .Take(batchSize)
+                .Select(eventPayload => eventPayload.ToEventPayloadDataItem()),
         };
     }
 }

@@ -48,7 +48,8 @@ public static class Program
                     .ThatImplement<INotification>()
                     .FromAssemblyContaining<CreateOrModifyThing>()
                     .Build())
-            .AddInterstellarCosmosDbEventStorage<EventSourcingCosmosContainerProvider>()
+            .AddInterstellarCosmosDbEventStorage<EventSourcingCosmosContainerProvider>(
+                new CosmosDbEventStoreSettings())
             .AddInterstellarExamples()
             .AddInterstellarCosmosDbExamples()
             .BuildServiceProvider();

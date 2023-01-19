@@ -37,39 +37,36 @@ function storeEventsSproc(eventSlice) {
 
     var options = { disableAutomaticIdGeneration: false };
     var eventWriteCount = 0;
-    var metadata;
 
     checkSliceCanBeWritten();
 
     function checkSliceCanBeWritten() {
-        var streamMetadataQuery = {
-            query: 'SELECT * FROM c WHERE c.id = @metadataId',
+        var lastEventInStreamQuery = {
+            query: 'SELECT * FROM c WHERE c.StreamId = @streamId ORDER BY c.EventIndex DESC',
             parameters: [{
-                name: '@metadataId',
-                value: getStreamMetadataId()
+                name: '@streamId',
+                value: eventSlice.StreamId
             }]
         };
 
-        collection.queryDocuments(collectionLink, streamMetadataQuery, function (err, items) {
+        collection.queryDocuments(collectionLink, lastEventInStreamQuery, function (err, items) {
             if (err) {
                 throw err;
             }
             if (items.length === 0) {
                 createMetadata();
-            } else if (items[0].LastEventIndex === eventSlice.StartIndex) {
-                metadata = items[0];
+            } else if (items[0].EventIndex === eventSlice.StartIndex) {
                 writeEvents();
             } else {
-                throw new Error(ERROR_CODES.CONFLICT, "Slice StartIndex differs from stream LastIndex.");
+                throw new Error(ERROR_CODES.CONFLICT, "Slice StartIndex: " + eventSlice.StartIndex + " differs from stream LastIndex: " + items[0].EventIndex + ".");
             }
         });
     }
-
+       
     function createMetadata() {
         var streamMetadata = {
             id: getStreamMetadataId(),
             StreamId: eventSlice.StreamId,
-            LastEventIndex: -1,
             ImmediateUpdateEventIndex: -1
         };
         if (!collection.createDocument(collectionLink, streamMetadata, options, createMetadataCallback)) {
@@ -77,11 +74,10 @@ function storeEventsSproc(eventSlice) {
         }
     }
 
-    function createMetadataCallback(err, item) {
+    function createMetadataCallback(err) {
         if (err) {
             throw err;
         }
-        metadata = item;
         writeEvents();
     }
 
@@ -96,27 +92,6 @@ function storeEventsSproc(eventSlice) {
     }
 
     function eventWriteCallback(err) {
-        if (err) {
-            throw err;
-        }
-
-        updateMetadata(eventSlice.Events[eventWriteCount]);
-    }
-
-    function updateMetadata(eventPayload) {
-        var newMetadata = {
-            id: metadata.id,
-            StreamId: eventSlice.StreamId,
-            LastEventIndex: eventPayload.EventIndex,
-            ImmediateUpdateEventIndex: metadata.ImmediateUpdateEventIndex
-        };
-
-        if (!collection.replaceDocument(metadata._self, newMetadata, updateMetadataCallback)) {
-            getContext().getResponse().setBody(eventWriteCount);
-        }
-    }
-
-    function updateMetadataCallback(err) {
         if (err) {
             throw err;
         }

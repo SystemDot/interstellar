@@ -50,7 +50,8 @@ public static class Program
                     .ThatImplement<INotification>()
                     .FromAssemblyContaining<TestPerformanceEvent>()
                     .Build())
-            .AddInterstellarCosmosDbEventStorage<EventSourcingCosmosContainerProvider>()
+            .AddInterstellarCosmosDbEventStorage<EventSourcingCosmosContainerProvider>(
+                new CosmosDbEventStoreSettings { WriteBatchSize = 500 })
             .AddInterstellarPerformanceTests()
             .BuildServiceProvider();
     }

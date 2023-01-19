@@ -9,16 +9,19 @@ public class CosmosDbEventStore : IEventStore
     private readonly IEventSourcingCosmosContainerProvider containerProvider;
     private readonly MessageNameTypeLookup messageNameTypeLookup;
     private readonly IEventDeliverer eventDeliverer;
+    private readonly CosmosDbEventStoreSettings settings;
 
 
     public CosmosDbEventStore(
         IEventSourcingCosmosContainerProvider containerProvider,
         MessageNameTypeLookup messageNameTypeLookup,
-        IEventDeliverer eventDeliverer)
+        IEventDeliverer eventDeliverer,
+        CosmosDbEventStoreSettings settings)
     {
         this.containerProvider = containerProvider;
         this.messageNameTypeLookup = messageNameTypeLookup;
         this.eventDeliverer = eventDeliverer;
+        this.settings = settings;
     }
 
     public async Task<EventStream> GetEventsAsync(string streamId)
@@ -38,14 +41,14 @@ public class CosmosDbEventStore : IEventStore
         await RemoveImmediateDispatchPositionAsync(toStore, container);
     }
 
-    private static async Task WriteEventsAsync(EventStreamSlice toStore, Container container)
+    private async Task WriteEventsAsync(EventStreamSlice toStore, Container container)
     {
         try
         {
             var result = await container.Scripts.ExecuteStoredProcedureAsync<int>(
                 StoredProcedures.EventStorage,
                 new PartitionKey(toStore.StreamId),
-                new dynamic[] { toStore.ToEventStreamSliceDataItem() });
+                new dynamic[] { toStore.ToEventStreamSliceDataItem(settings.WriteBatchSize) });
 
             if (result.Resource < toStore.Events.Count())
             {
@@ -54,7 +57,7 @@ public class CosmosDbEventStore : IEventStore
         }
         catch (CosmosException e)
         {
-            if (e.SubStatusCode == ConflictStatusCode)
+            if (IsOptimisticLockError(e))
             {
                 throw new ExpectedEventIndexIncorrectException(toStore.StreamId, toStore.StartIndex);
             }
@@ -102,10 +105,15 @@ public class CosmosDbEventStore : IEventStore
         }
         catch (CosmosException e)
         {
-            if (e.SubStatusCode != ConflictStatusCode)
+            if (IsOptimisticLockError(e))
             {
                 throw;
             }
         }
+    }
+
+    private static bool IsOptimisticLockError(CosmosException e)
+    {
+        return e.SubStatusCode == ConflictStatusCode && e.Message.Contains("Slice StartIndex:");
     }
 }

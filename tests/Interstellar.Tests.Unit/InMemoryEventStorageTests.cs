@@ -101,15 +101,15 @@
             await domainCommandDeliverer.DeliverCommandAsync(thirdStateCommand, headers);
 
             var deliveredEventContext = services.GetService<DeliveredEventContext>();
-            deliveredEventContext!.Events.Count.Should().Be(3);
+            deliveredEventContext!.Events.Count.Should().Be(4);
             EventPayload eventPayload = deliveredEventContext!.Events.Last();
             eventPayload.Id.Should().NotBe(Guid.Empty);
             eventPayload.StreamId.Should().Be(secondStateCommand.Id.ToString());
             eventPayload.CreatedOn.Should().BeWithin(TimeSpan.FromMinutes(10));
             eventPayload.Headers.Should().Equal(headers);
-            eventPayload.EventIndex.Should().Be(2);
-            eventPayload.EventBody.Should().BeOfType<TestStateThreeEvent>();
-            var testStateThreeEvent = eventPayload.EventBody.As<TestStateThreeEvent>();
+            eventPayload.EventIndex.Should().Be(3);
+            eventPayload.EventBody.Should().BeOfType<TestStateThreeOtherEvent>();
+            var testStateThreeEvent = eventPayload.EventBody.As<TestStateThreeOtherEvent>();
             testStateThreeEvent.Id.Should().Be(thirdStateCommand.Id.ToString());
             testStateThreeEvent.NumberOfEventsPrior.Should().Be(2);
         }
