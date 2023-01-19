@@ -12,11 +12,12 @@ namespace Interstellar
             inner = new Dictionary<Type, IAggregateCommandRegistration>();
         }
 
-        public void RegisterCommandForAggregateReception<TAggregate, TCommand>(Func<TCommand, string> streamIdFactory)
-            where TAggregate : AggregateRoot
+        public void RegisterCommandForAggregateReception<TAggregate, TAggregateState, TCommand>(Func<TCommand, string> streamIdFactory)
+            where TAggregate : AggregateRoot<TAggregateState>
+            where TAggregateState : AggregateState, new()
             where TCommand : class
         {
-            inner.Add(typeof(TCommand), new AggregateCommandRegistration<TAggregate, TCommand>(streamIdFactory));
+            inner.Add(typeof(TCommand), new AggregateCommandRegistration<TAggregate, TAggregateState, TCommand>(streamIdFactory));
         }
 
         public void SetAggregateToLookUpWithJoinedStreams<TCommand>(Func<TCommand, string>[] otherStreamIdFactories)

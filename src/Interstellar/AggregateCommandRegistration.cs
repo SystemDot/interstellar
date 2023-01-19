@@ -4,8 +4,10 @@ using System.Linq;
 
 namespace Interstellar
 {
-    public class AggregateCommandRegistration<TAggregate, TCommand> : IAggregateCommandRegistration
-        where TAggregate : AggregateRoot where TCommand : class
+    public class AggregateCommandRegistration<TAggregate, TAggregateState, TCommand> : IAggregateCommandRegistration
+        where TAggregate : AggregateRoot<TAggregateState>
+        where TAggregateState : AggregateState, new()
+        where TCommand : class
     {
         private readonly List<Func<TCommand, string>> streamIdFactories;
 
@@ -24,7 +26,7 @@ namespace Interstellar
 
         public AggregateResolution Resolve(object command, AggregateFactory aggregateFactory)
         {
-            var aggregateRoot = aggregateFactory.CreateAggregate<TAggregate>();
+            TAggregate aggregateRoot = aggregateFactory.CreateAggregate<TAggregate, TAggregateState>();
 
             IEnumerable<string> streamIds = streamIdFactories
                 .Select(f => f((command as TCommand)!))

@@ -4,10 +4,10 @@ namespace Interstellar
 {
     public class AggregateResolution
     {
-        public AggregateRoot Aggregate { get; }
+        public IAggregateRoot Aggregate { get; }
         public IEnumerable<string> StreamIds { get; }
 
-        public AggregateResolution(AggregateRoot aggregate, IEnumerable<string> streamIds)
+        public AggregateResolution(IAggregateRoot aggregate, IEnumerable<string> streamIds)
         {
             Aggregate = aggregate;
             StreamIds = streamIds;

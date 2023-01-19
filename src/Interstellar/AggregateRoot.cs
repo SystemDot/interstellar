@@ -9,7 +9,7 @@ namespace Interstellar
     {
     }
 
-    public abstract class AggregateRoot<TState>
+    public abstract class AggregateRoot<TState> : IAggregateRoot
         where TState : AggregateState, new()
     {
         private readonly Dictionary<Type, IStatusChangeOptions> statusOptionsLookup;
@@ -25,7 +25,7 @@ namespace Interstellar
             whenOptionsLookup = new Dictionary<Type, IWhenOptions>();
         }
 
-        internal void ReplayEvents(IEnumerable<EventPayload> toReplay)
+        public void ReplayEvents(IEnumerable<EventPayload> toReplay)
         {
             long lastEventIndex = UnitOfWorkContext.Current!.EventsAdded.StartIndex;
 
@@ -59,7 +59,7 @@ namespace Interstellar
             StatusState = statusOptionsLookup[@event.GetType()].RunBecome();
         }
 
-        internal Task ReceiveCommandAsync<TCommand>(TCommand command)
+        public Task ReceiveCommandAsync<TCommand>(TCommand command)
         {
             if (!whenOptionsLookup.ContainsKey(command!.GetType()))
             {
