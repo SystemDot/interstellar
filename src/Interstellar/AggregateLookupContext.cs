@@ -1,7 +1,11 @@
 ﻿namespace Interstellar
 {
+    using System.Threading;
+
     public static class AggregateLookupContext
     {
-        public static AggregateLookup Current { get; } = new AggregateLookup();
+        private static readonly AsyncLocal<AggregateLookup> Storage = new AsyncLocal<AggregateLookup>();
+
+        public static AggregateLookup Current => Storage.Value ?? (Storage.Value = new AggregateLookup());
     }
 }

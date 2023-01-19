@@ -20,8 +20,11 @@ namespace Interstellar
             this.eventStore = eventStore;
         }
 
-        public Task DeliverCommandAsync<TCommand>(TCommand command) =>
-            DeliverCommandAsync(command, 0);
+        public Task DeliverCommandAsync<TCommand>(TCommand command, IDictionary<string, object> headers)
+        {
+            MessageContext.Current.Headers = headers;
+            return DeliverCommandAsync(command, 0);
+        }
 
         private async Task DeliverCommandAsync<TCommand>(TCommand command, int attempts)
         {

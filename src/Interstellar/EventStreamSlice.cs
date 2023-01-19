@@ -30,10 +30,12 @@
         public EventStreamSlice AddEvent(object toAdd)
         {
             List<EventPayload> events = Events.ToList();
+
             events.Add(new EventPayload(
                 Guid.NewGuid(),
                 StreamId, 
                 (events.LastOrDefault()?.EventIndex ?? StartIndex) + 1,
+                MessageContext.Current.Headers,
                 toAdd,
                 DateTime.Now));
 

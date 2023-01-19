@@ -15,6 +15,8 @@ public class MessageBus
         {
             // Go to some other endpoint to send command
         }
-        return domainCommandDeliverer.DeliverCommandAsync(command);
+
+        var headers = new Dictionary<string, object> { { "correlationId", Guid.NewGuid() } };
+        return domainCommandDeliverer.DeliverCommandAsync(command, headers);
     }
 }

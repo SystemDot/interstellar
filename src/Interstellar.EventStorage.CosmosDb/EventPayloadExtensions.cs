@@ -9,6 +9,7 @@ public static class EventPayloadExtensions
             StreamId = eventPayload.StreamId,
             EventIndex = eventPayload.EventIndex,
             EventTypeName = eventPayload.EventBody.GetType().Name!,
+            Headers = eventPayload.Headers,
             EventBody = eventPayload.EventBody.ToJson(),
             CreatedOn = eventPayload.CreatedOn
         };

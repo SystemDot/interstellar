@@ -10,6 +10,7 @@ public static class EventPayloadDataItemExtensions
             Guid.Parse(eventPayloadDataItem.Id),
             eventPayloadDataItem.StreamId,
             eventPayloadDataItem.EventIndex,
+            eventPayloadDataItem.Headers,
             eventPayloadDataItem.EventBody.FromJson(messageNameTypeLookup.Lookup(eventPayloadDataItem.EventTypeName)),
             eventPayloadDataItem.CreatedOn);
     }

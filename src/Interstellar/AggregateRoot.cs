@@ -86,7 +86,7 @@ namespace Interstellar
 
         protected internal void Then<TEvent>(TEvent @event)
         {
-            UnitOfWorkContext.Current.EventsAdded = UnitOfWorkContext.Current.EventsAdded.AddEvent(@event!);
+            UnitOfWorkContext.Current!.EventsAdded = UnitOfWorkContext.Current.EventsAdded.AddEvent(@event!);
         }
     }
 }
