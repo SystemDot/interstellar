@@ -37,7 +37,7 @@
         }
 
         [Fact]
-        public async Task DeliveringTestCommandTwiceDoesNotProduceEventAsItGetsIgnoreThroughStateLocksInAggregate()
+        public async Task DeliveringFirstStateTestCommandTwiceDoesNotProduceEventAsItGetsIgnoreThroughStateLocksInAggregate()
         {
             var command = new TestStateOneCommand(Guid.NewGuid());
             var headers = new Dictionary<string, object>();
@@ -87,6 +87,34 @@
         }
 
         [Fact]
+        public async Task DeliveringSecondStateTestCommandTwiceDoesNotProduceEventAsItGetsIgnoreThroughStateLocksInAggregate()
+        {
+            var firstStateCommand = new TestStateOneCommand(Guid.NewGuid());
+            var secondStateCommand = new TestStateTwoCommand(firstStateCommand.Id);
+            var headers = new Dictionary<string, object>();
+
+            var domainCommandDeliverer = services.GetService<DomainCommandDeliverer>()!;
+
+            await domainCommandDeliverer.DeliverCommandAsync(firstStateCommand, headers);
+            await domainCommandDeliverer.DeliverCommandAsync(secondStateCommand, headers);
+            
+            Exception actualException = null!;
+
+            try
+            {
+                await domainCommandDeliverer.DeliverCommandAsync(secondStateCommand, headers);
+            }
+            catch (Exception exception)
+            {
+                actualException = exception;
+            }
+
+            actualException.Should().NotBeNull();
+            actualException.Should().BeOfType<CommandNotHandledByAggregateException<TestStateTwoCommand, TestAggregateState>>();
+            services.GetService<DeliveredEventContext>()!.Events.Count.Should().Be(2);
+        }
+
+        [Fact]
         public async Task DeliveringThirdStateTestCommandResultsInEventWithStateViaAggregateWhenFirstAndSecondStateCommandAreDeliveredFirst()
         {
             var firstStateCommand = new TestStateOneCommand(Guid.NewGuid());
@@ -102,16 +130,42 @@
 
             var deliveredEventContext = services.GetService<DeliveredEventContext>();
             deliveredEventContext!.Events.Count.Should().Be(4);
-            EventPayload eventPayload = deliveredEventContext!.Events.Last();
-            eventPayload.Id.Should().NotBe(Guid.Empty);
-            eventPayload.StreamId.Should().Be(secondStateCommand.Id.ToString());
-            eventPayload.CreatedOn.Should().BeWithin(TimeSpan.FromMinutes(10));
-            eventPayload.Headers.Should().Equal(headers);
-            eventPayload.EventIndex.Should().Be(3);
-            eventPayload.EventBody.Should().BeOfType<TestStateThreeOtherEvent>();
-            var testStateThreeEvent = eventPayload.EventBody.As<TestStateThreeOtherEvent>();
+            EventPayload eventPayload = deliveredEventContext!.Events.ElementAt(2);
+            var testStateThreeEvent = eventPayload.EventBody.As<TestStateThreeEvent>();
             testStateThreeEvent.Id.Should().Be(thirdStateCommand.Id.ToString());
             testStateThreeEvent.NumberOfEventsPrior.Should().Be(2);
+            eventPayload = deliveredEventContext!.Events.ElementAt(3);
+            eventPayload.EventBody.As<TestStateThreeOtherEvent>().NumberOfEventsPrior.Should().Be(3);
+        }
+
+        [Fact]
+        public async Task DeliveringThirdStateTestCommandTwiceDoesNotProduceEventAsItGetsIgnoreThroughStateLocksInAggregate()
+        {
+            var firstStateCommand = new TestStateOneCommand(Guid.NewGuid());
+            var secondStateCommand = new TestStateTwoCommand(firstStateCommand.Id);
+            var thirdStateCommand = new TestStateThreeCommand(firstStateCommand.Id);
+            var headers = new Dictionary<string, object>();
+
+            var domainCommandDeliverer = services.GetService<DomainCommandDeliverer>()!;
+
+            await domainCommandDeliverer.DeliverCommandAsync(firstStateCommand, headers);
+            await domainCommandDeliverer.DeliverCommandAsync(secondStateCommand, headers);
+            await domainCommandDeliverer.DeliverCommandAsync(thirdStateCommand, headers);
+
+            Exception actualException = null!;
+
+            try
+            {
+                await domainCommandDeliverer.DeliverCommandAsync(thirdStateCommand, headers);
+            }
+            catch (Exception exception)
+            {
+                actualException = exception;
+            }
+
+            actualException.Should().NotBeNull();
+            actualException.Should().BeOfType<CommandNotHandledByAggregateException<TestStateThreeCommand, TestAggregateState>>();
+            services.GetService<DeliveredEventContext>()!.Events.Count.Should().Be(4);
         }
     }
 }

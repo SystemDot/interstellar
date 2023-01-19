@@ -17,6 +17,7 @@ public class TestAggregate : AggregateRoot<TestAggregateState>
     {
         On<TestStateOneEvent>().Become(StateTwo);
         On<TestStateTwoEvent>().Become(StateThree);
+        On<TestStateThreeOtherEvent>().Become(StateFour);
         StateOne();
     }
 
@@ -37,5 +38,9 @@ public class TestAggregate : AggregateRoot<TestAggregateState>
             Then(new TestStateThreeEvent(command.Id, State.NumberOfEventsPrior));
             Then(new TestStateThreeOtherEvent(command.Id, State.NumberOfEventsPrior));
         });
+    }
+
+    private void StateFour()
+    {
     }
 }

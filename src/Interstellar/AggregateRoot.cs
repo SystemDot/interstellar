@@ -3,6 +3,7 @@ namespace Interstellar
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     public abstract class AggregateRoot : AggregateRoot<NullState>
@@ -87,6 +88,7 @@ namespace Interstellar
         protected internal void Then<TEvent>(TEvent @event)
         {
             UnitOfWorkContext.Current!.EventsAdded = UnitOfWorkContext.Current.EventsAdded.AddEvent(@event!);
+            ReplayEvent(UnitOfWorkContext.Current.EventsAdded.Last());
         }
     }
 }
