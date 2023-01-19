@@ -7,5 +7,5 @@ public class ThingListItem
     [JsonProperty(PropertyName = "id")]
     public Guid Id { get; init; }
     public string Name { get; init; } = null!;
-    public int Type { get; init; }
+    public string Type { get; init; }
 }

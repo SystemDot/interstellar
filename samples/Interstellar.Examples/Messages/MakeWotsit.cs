@@ -1,6 +1,6 @@
 ﻿namespace Interstellar.Examples.Messages;
 
-public class MakeWotsit : ICommand
+public class MakeWotsit
 {
     public Guid Id { get;  }
     public Guid ThingId { get;  }

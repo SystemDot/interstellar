@@ -1,6 +1,6 @@
 ﻿namespace Interstellar.Examples.Messages;
 
-public class CreateOrModifyThing : ICommand
+public class CreateOrModifyThing
 {
     public Guid Id { get; }
     public string Name { get; }

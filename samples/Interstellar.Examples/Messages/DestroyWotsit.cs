@@ -1,6 +1,6 @@
 ﻿namespace Interstellar.Examples.Messages;
 
-public class DestroyWotsit : ICommand
+public class DestroyWotsit
 {
     public Guid Id { get; }
     public Guid ThingId { get; }
