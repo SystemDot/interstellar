@@ -19,6 +19,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interstellar.Examples.Cosmo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interstellar.Examples.InMemory", "samples\Interstellar.Examples.InMemory\Interstellar.Examples.InMemory.csproj", "{98F67345-5FAD-40CA-8324-97C36B9BCD8B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{6D9E576B-A156-4DA1-921E-4249255CB5CC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interstellar.Tests.Performance", "tests\Interstellar.Tests.Performance\Interstellar.Tests.Performance.csproj", "{205AB767-E9AC-4E54-B3ED-8668843C1555}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +53,10 @@ Global
 		{98F67345-5FAD-40CA-8324-97C36B9BCD8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98F67345-5FAD-40CA-8324-97C36B9BCD8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{98F67345-5FAD-40CA-8324-97C36B9BCD8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{205AB767-E9AC-4E54-B3ED-8668843C1555}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{205AB767-E9AC-4E54-B3ED-8668843C1555}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{205AB767-E9AC-4E54-B3ED-8668843C1555}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{205AB767-E9AC-4E54-B3ED-8668843C1555}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,6 +67,7 @@ Global
 		{54BFB7E0-9AD2-48EA-BF83-7689825564FA} = {FDDAB8FD-A266-4230-BA16-B6F7563BED0D}
 		{2CC60F7A-7C87-4276-B252-7F5A5ABA4CC5} = {FDDAB8FD-A266-4230-BA16-B6F7563BED0D}
 		{98F67345-5FAD-40CA-8324-97C36B9BCD8B} = {FDDAB8FD-A266-4230-BA16-B6F7563BED0D}
+		{205AB767-E9AC-4E54-B3ED-8668843C1555} = {6D9E576B-A156-4DA1-921E-4249255CB5CC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4351BF7C-6733-4DB6-8EC7-5B1141D2F748}

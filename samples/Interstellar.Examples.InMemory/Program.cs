@@ -33,7 +33,7 @@ public static class Program
     {
         return new ServiceCollection()
             .AddMediatR(Assembly.GetExecutingAssembly())
-            .AddInterstellar(
+            .AddInterstellar<MediatREventDeliverer>(
                 configuration =>
                 {
                     Thing.Configure(configuration);

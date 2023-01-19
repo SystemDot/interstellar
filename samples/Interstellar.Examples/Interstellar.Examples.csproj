@@ -8,8 +8,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\src\Interstellar.EventStorage.CosmosDb\Interstellar.EventStorage.CosmosDb.csproj" />
-		<ProjectReference Include="..\..\src\Interstellar.EventStorage.InMemory\Interstellar.EventStorage.InMemory.csproj" />
 		<ProjectReference Include="..\..\src\Interstellar\Interstellar.csproj" />
 	</ItemGroup>
 

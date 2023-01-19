@@ -1,15 +1,15 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace Interstellar.EventStorage.CosmosDb;
+﻿namespace Interstellar.EventStorage.CosmosDb;
 
 using Microsoft.Azure.Cosmos;
 
 public class CosmosDbEventStore : IEventStore
 {
+    private static readonly int ConflictStatusCode = 409;
+
     private readonly IEventSourcingCosmosContainerProvider containerProvider;
     private readonly MessageNameTypeLookup messageNameTypeLookup;
     private readonly IEventDeliverer eventDeliverer;
-    private static int ConflictStatusCode = 409;
+
 
     public CosmosDbEventStore(
         IEventSourcingCosmosContainerProvider containerProvider,

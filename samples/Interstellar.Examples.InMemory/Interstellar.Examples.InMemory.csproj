@@ -12,6 +12,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\..\src\Interstellar.EventStorage.InMemory\Interstellar.EventStorage.InMemory.csproj" />
 	  <ProjectReference Include="..\Interstellar.Examples\Interstellar.Examples.csproj" />
 	</ItemGroup>
 </Project>

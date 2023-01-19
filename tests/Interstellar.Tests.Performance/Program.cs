@@ -1,14 +1,12 @@
 ﻿using System.Reflection;
 using Interstellar.EventStorage.CosmosDb;
-using Interstellar.Examples.Messages;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Interstellar.Examples.CosmosDb;
+namespace Interstellar.Tests.Performance;
 
 public static class Program
 {
-
     public static async Task Main(string[] args)
     {
         ServiceProvider serviceProvider = BuildCosmosExample();
@@ -19,18 +17,23 @@ public static class Program
         await serviceProvider.GetRequiredService<CosmosDatabaseInitialiser>().InitialiseAsync();
         while (true)
         {
-            Console.WriteLine("Press 1 to run");
-            Console.WriteLine("Any other key to exit");
-
-            if (Console.ReadKey().Key != ConsoleKey.D1)
+            Console.WriteLine("How many events to create?");
+            
+            if (!int.TryParse(Console.ReadLine(), out int eventCount))
             {
-                Console.WriteLine("Exiting");
-                return;
+                continue;
+            }
+
+            Console.WriteLine("How many times to run?");
+
+            if (!int.TryParse(Console.ReadLine(), out int runCount))
+            {
+                continue;
             }
 
             Console.WriteLine("Running");
 
-            await serviceProvider.GetRequiredService<ExampleRunner>().RunAsync();
+            await serviceProvider.GetRequiredService<TestRunner>().RunAsync(eventCount, runCount);
         }
     }
 
@@ -41,16 +44,14 @@ public static class Program
             .AddInterstellar<MediatREventDeliverer>(
                 configuration =>
                 {
-                    Thing.Configure(configuration);
-                    ThingWotsits.Configure(configuration);
+                    PerformanceTestAggregate.Configure(configuration);
                 },
                 UseMessageTypes
                     .ThatImplement<INotification>()
-                    .FromAssemblyContaining<CreateOrModifyThing>()
+                    .FromAssemblyContaining<TestPerformanceEvent>()
                     .Build())
             .AddInterstellarCosmosDbEventStorage<EventSourcingCosmosContainerProvider>()
-            .AddInterstellarExamples()
-            .AddInterstellarCosmosDbExamples()
+            .AddInterstellarPerformanceTests()
             .BuildServiceProvider();
     }
 }
