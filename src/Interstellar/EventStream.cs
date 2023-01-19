@@ -26,5 +26,10 @@
             events.AddRange(toAppend.Events);
             return new EventStream(events);
         }
+
+        public IEnumerable<EventPayload> SliceAt(long index)
+        {
+            return Events.Where(e => e.EventIndex > index);
+        }
     }
 }

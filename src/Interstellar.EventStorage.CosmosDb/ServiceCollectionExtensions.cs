@@ -11,6 +11,8 @@ public static class ServiceCollectionExtensions
     {
         services.AddSingleton(settings);
         services.AddSingleton<CosmosDatabaseInitialiser>();
+        services.AddSingleton<ImmediateEventDispatcher>();
+        services.AddSingleton<ImmediateEventRedispatcher>();
         services.AddSingleton<IEventSourcingCosmosContainerProvider, TEventSourcingCosmosContainerProvider>();
         services.AddSingleton<IEventStore, CosmosDbEventStore>();
         return services;

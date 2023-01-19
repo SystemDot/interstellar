@@ -8,19 +8,19 @@ public class CosmosDbEventStore : IEventStore
 
     private readonly IEventSourcingCosmosContainerProvider containerProvider;
     private readonly MessageNameTypeLookup messageNameTypeLookup;
-    private readonly IEventDeliverer eventDeliverer;
+    private readonly ImmediateEventDispatcher immediateEventDispatcher;
     private readonly CosmosDbEventStoreSettings settings;
 
 
     public CosmosDbEventStore(
         IEventSourcingCosmosContainerProvider containerProvider,
         MessageNameTypeLookup messageNameTypeLookup,
-        IEventDeliverer eventDeliverer,
+        ImmediateEventDispatcher immediateEventDispatcher,
         CosmosDbEventStoreSettings settings)
     {
         this.containerProvider = containerProvider;
         this.messageNameTypeLookup = messageNameTypeLookup;
-        this.eventDeliverer = eventDeliverer;
+        this.immediateEventDispatcher = immediateEventDispatcher;
         this.settings = settings;
     }
 
@@ -37,8 +37,7 @@ public class CosmosDbEventStore : IEventStore
         Container container = await GetContainerAsync();
         
         await WriteEventsAsync(toStore, container);
-        await eventDeliverer.DeliverEventsAsync(toStore);
-        await RemoveImmediateDispatchPositionAsync(toStore, container);
+        await immediateEventDispatcher.DispatchEventsAsync(toStore);
     }
 
     private async Task WriteEventsAsync(EventStreamSlice toStore, Container container)
@@ -65,9 +64,6 @@ public class CosmosDbEventStore : IEventStore
         }
     }
 
-    private Task<Container> GetContainerAsync() => 
-        containerProvider.ProvideContainerAsync(PartitionKeys.StreamId);
-
     private static FeedIterator<EventPayloadDataItem> GetQueryResultSetIterator(string streamId, Container container)
     {
         var queryDefinition = new QueryDefinition($"SELECT * FROM c WHERE c.StreamId = '{streamId}'");
@@ -84,36 +80,22 @@ public class CosmosDbEventStore : IEventStore
 
             foreach (EventPayloadDataItem? eventPayloadDataItem in currentResultSet)
             {
-                if (Guid.TryParse(eventPayloadDataItem.Id, out _))
+                if (!Guid.TryParse(eventPayloadDataItem.Id, out _))
                 {
-                    events.Add(eventPayloadDataItem.ToEventPayload(messageNameTypeLookup));
+                    continue;
                 }
+                
+                events.Add(eventPayloadDataItem.ToEventPayload(messageNameTypeLookup));
             }
         }
 
         return events;
     }
 
-    private static async Task RemoveImmediateDispatchPositionAsync(EventStreamSlice toStore, Container container)
-    {
-        try
-        {
-            await container.Scripts.ExecuteStoredProcedureAsync<int>(
-                StoredProcedures.RemoveImmediateDispatchPosition,
-                new PartitionKey(toStore.StreamId),
-                new dynamic[] { toStore.StreamId, toStore.Last().EventIndex });
-        }
-        catch (CosmosException e)
-        {
-            if (IsOptimisticLockError(e))
-            {
-                throw;
-            }
-        }
-    }
 
-    private static bool IsOptimisticLockError(CosmosException e)
-    {
-        return e.SubStatusCode == ConflictStatusCode && e.Message.Contains("Slice StartIndex:");
-    }
+    private Task<Container> GetContainerAsync() => 
+        containerProvider.ProvideContainerAsync(PartitionKeys.StreamId);
+
+    private static bool IsOptimisticLockError(CosmosException e) => 
+        e.SubStatusCode == ConflictStatusCode && e.Message.Contains("Slice StartIndex:");
 }

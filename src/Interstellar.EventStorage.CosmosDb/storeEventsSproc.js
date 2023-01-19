@@ -53,28 +53,27 @@ function storeEventsSproc(eventSlice) {
             if (err) {
                 throw err;
             }
-            if (items.length === 0) {
-                createMetadata();
-            } else if (items[0].EventIndex === eventSlice.StartIndex) {
-                writeEvents();
+            if (items.length == 0 || items[0].EventIndex === eventSlice.StartIndex) {
+                createImmediateUpdateEventIndex();
             } else {
                 throw new Error(ERROR_CODES.CONFLICT, "Slice StartIndex: " + eventSlice.StartIndex + " differs from stream LastIndex: " + items[0].EventIndex + ".");
             }
         });
     }
        
-    function createMetadata() {
-        var streamMetadata = {
-            id: getStreamMetadataId(),
+    function createImmediateUpdateEventIndex() {
+        var immediateUpdateEventIndexQuery = {
+            id: getImmediateUpdateEventIndex(),
+            Type: 'ImmediateUpdateEventIndex',
             StreamId: eventSlice.StreamId,
-            ImmediateUpdateEventIndex: -1
+            Index: eventSlice.StartIndex
         };
-        if (!collection.createDocument(collectionLink, streamMetadata, options, createMetadataCallback)) {
-            throw new Error(ERROR_CODES.NOT_ACCEPTED, "Could not write stream metadata.");
+        if (!collection.createDocument(collectionLink, immediateUpdateEventIndexQuery, options, createImmediateUpdateEventIndexCallback)) {
+            throw new Error(ERROR_CODES.NOT_ACCEPTED, "Could not write immediate update event index.");
         }
     }
 
-    function createMetadataCallback(err) {
+    function createImmediateUpdateEventIndexCallback(err) {
         if (err) {
             throw err;
         }
@@ -105,7 +104,7 @@ function storeEventsSproc(eventSlice) {
         }
     }
 
-    function getStreamMetadataId() {
-        return 'stream-metadata-' + eventSlice.StreamId;
+    function getImmediateUpdateEventIndex() {
+        return 'immediate-update-event-index-' + eventSlice.StreamId + "-" + eventSlice.StartIndex;
     }
 }

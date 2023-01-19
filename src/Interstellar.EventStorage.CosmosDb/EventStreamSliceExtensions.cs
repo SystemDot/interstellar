@@ -13,4 +13,7 @@ public static class EventStreamSliceExtensions
                 .Select(eventPayload => eventPayload.ToEventPayloadDataItem()),
         };
     }
+
+    public static string ToImmediateUpdateEventIndexId(this EventStreamSlice toStore) =>
+        $"immediate-update-event-index-{toStore.StreamId}-{toStore.StartIndex}";
 }

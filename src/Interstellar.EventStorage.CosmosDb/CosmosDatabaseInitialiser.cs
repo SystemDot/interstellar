@@ -6,10 +6,13 @@ namespace Interstellar.EventStorage.CosmosDb;
 public class CosmosDatabaseInitialiser
 {
     private readonly IEventSourcingCosmosContainerProvider containerProvider;
+    private readonly ImmediateEventRedispatcher immediateEventRedispatcher;
 
-    public CosmosDatabaseInitialiser(IEventSourcingCosmosContainerProvider containerProvider)
+    public CosmosDatabaseInitialiser(IEventSourcingCosmosContainerProvider containerProvider,
+        ImmediateEventRedispatcher immediateEventRedispatcher)
     {
         this.containerProvider = containerProvider;
+        this.immediateEventRedispatcher = immediateEventRedispatcher;
     }
 
     public async Task InitialiseAsync()
@@ -19,6 +22,8 @@ public class CosmosDatabaseInitialiser
             await DeleteStoredProceduresAsync();
         }
         await CreateStoredProceduresAsync();
+
+        await immediateEventRedispatcher.RedispatchUnDispatchedEventsAsync();
     }
 
     private async Task<bool> StoredProceduresExistAsync()
@@ -32,13 +37,11 @@ public class CosmosDatabaseInitialiser
     private async Task DeleteStoredProceduresAsync()
     {
         await DeleteStoredProcedureAsync(StoredProcedures.EventStorage);
-        await DeleteStoredProcedureAsync(StoredProcedures.RemoveImmediateDispatchPosition);
     }
 
     private async Task CreateStoredProceduresAsync()
     {
         await CreateStoredProcedureAsync(StoredProcedures.EventStorage);
-        await CreateStoredProcedureAsync(StoredProcedures.RemoveImmediateDispatchPosition);
     }
 
     private async Task DeleteStoredProcedureAsync(string procedureId)

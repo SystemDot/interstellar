@@ -20,7 +20,7 @@
         {
         }
 
-        private EventStreamSlice(string streamId, long startIndex, IEnumerable<EventPayload> events)
+        public EventStreamSlice(string streamId, long startIndex, IEnumerable<EventPayload> events)
         {
             StreamId = streamId;
             StartIndex = startIndex;

@@ -36,7 +36,7 @@ public class TestRunner
         var sampleNumber = 1;
         foreach (var sample in samples)
         {
-            Console.WriteLine($"Sample #{sampleNumber} time: {sample.Milliseconds}ms ");
+            Console.WriteLine($"Sample #{sampleNumber} time: {sample.TotalMilliseconds}ms ");
             sampleNumber++;
         }
     }

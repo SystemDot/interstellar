@@ -7,12 +7,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="removeImmediateDispatchPositionSproc.js" />
 	  <None Remove="storeEventsSproc.js" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <EmbeddedResource Include="removeImmediateDispatchPositionSproc.js" />
 	  <EmbeddedResource Include="storeEventsSproc.js" />
 	</ItemGroup>
 

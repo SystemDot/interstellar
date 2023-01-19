@@ -6,12 +6,28 @@ public static class EventPayloadDataItemExtensions
         this EventPayloadDataItem eventPayloadDataItem,
         MessageNameTypeLookup messageNameTypeLookup)
     {
+        Type eventType = null!;
+        var hasKnownBody = true;
+
+        try
+        {
+            eventType = messageNameTypeLookup.Lookup(eventPayloadDataItem.EventTypeName);
+        }
+        catch (CannotLookupMessageTypeByNameException)
+        {
+            hasKnownBody = false;
+        }
+        
+        var eventBody = hasKnownBody 
+            ? eventPayloadDataItem.EventBody.FromJson(eventType)
+            : eventPayloadDataItem.EventBody;
+
         return new EventPayload(
             Guid.Parse(eventPayloadDataItem.Id),
             eventPayloadDataItem.StreamId,
             eventPayloadDataItem.EventIndex,
             eventPayloadDataItem.Headers,
-            eventPayloadDataItem.EventBody.FromJson(messageNameTypeLookup.Lookup(eventPayloadDataItem.EventTypeName)),
+            eventBody,
             eventPayloadDataItem.CreatedOn);
     }
 }
