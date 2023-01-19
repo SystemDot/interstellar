@@ -1,3 +1,9 @@
 # interstellar
 
-Event sourcing domain library with cosmos backend with actor (state machine) style aggregates and event projections for read model persistence
+Lightweight Actor (state machine) style DDD library:
+ - Event sourced aggregates 
+ - Eventually will suport traditional direct state aggregates 
+ - pluggable backends, which so far are below (with more to come)
+  - In memory event store
+  - CosmosDb event store
+    
