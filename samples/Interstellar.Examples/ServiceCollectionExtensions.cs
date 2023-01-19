@@ -8,6 +8,7 @@ public static class ServiceCollectionExtensions
     {
         return services
             .AddSingleton<IEventDeliverer, MediatREventDeliverer>()
+            .AddSingleton<MessageBus>()
             .AddSingleton<UserService>()
             .AddSingleton<ExampleRunner>();
     }

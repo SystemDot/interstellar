@@ -4,9 +4,9 @@ namespace Interstellar.Examples;
 
 public class ExampleRunner
 {
-    private readonly DomainCommandDeliverer domainCommandDeliverer;
+    private readonly MessageBus domainCommandDeliverer;
 
-    public ExampleRunner(DomainCommandDeliverer domainCommandDeliverer)
+    public ExampleRunner(MessageBus domainCommandDeliverer)
     {
         this.domainCommandDeliverer = domainCommandDeliverer;
     }
@@ -15,20 +15,20 @@ public class ExampleRunner
     {
         var thingId = Guid.NewGuid();
 
-        await domainCommandDeliverer.DeliverCommandAsync(new CreateOrModifyThing(
+        await domainCommandDeliverer.SendCommandAsync(new CreateOrModifyThing(
             thingId, 
             "CreatedThing", 
             "Created Thing"));
 
-        await domainCommandDeliverer.DeliverCommandAsync(new CreateOrModifyThing(
+        await domainCommandDeliverer.SendCommandAsync(new CreateOrModifyThing(
             thingId,
             "ModifiedThing",
             "Modified Thing"));
 
         var wotsitId = Guid.NewGuid();
 
-        await domainCommandDeliverer.DeliverCommandAsync(new StartWotsit(wotsitId, thingId));
-        await domainCommandDeliverer.DeliverCommandAsync(new MakeWotsit(wotsitId, thingId, 50));
-        await domainCommandDeliverer.DeliverCommandAsync(new DestroyWotsit(wotsitId, thingId));
+        await domainCommandDeliverer.SendCommandAsync(new StartWotsit(wotsitId, thingId));
+        await domainCommandDeliverer.SendCommandAsync(new MakeWotsit(wotsitId, thingId, 50));
+        await domainCommandDeliverer.SendCommandAsync(new DestroyWotsit(wotsitId, thingId));
     }
 }

@@ -35,5 +35,7 @@ namespace Interstellar
 
             return registration.Resolve(command!, aggregateFactory);
         }
+
+        public bool CommandIsReceivedByAnAggregate<TCommand>() => inner.ContainsKey(typeof(TCommand));
     }
 }

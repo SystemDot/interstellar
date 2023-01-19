@@ -4,8 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Interstellar
 {
-    using System.Reflection;
-
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddInterstellar(
