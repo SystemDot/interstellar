@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class CommandNotHandledByAggregateException<TCommand, TState> : Exception
+    public class CommandNotHandledByAggregateException<TCommand, TState> : InterstellarException
         where TState : AggregateState, new()
     {
         public CommandNotHandledByAggregateException(AggregateRoot<TState> aggregate) 

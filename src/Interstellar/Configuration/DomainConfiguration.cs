@@ -5,10 +5,13 @@ namespace Interstellar.Configuration
 {
     public class DomainConfiguration
     {
+        internal AggregateLookup AggregateLookup { get; }
+
         internal IServiceCollection Services { get; }
 
-        public DomainConfiguration(IServiceCollection services)
+        public DomainConfiguration(IServiceCollection services, AggregateLookup aggregateLookup)
         {
+            AggregateLookup = aggregateLookup;
             Services = services;
         }
 

@@ -9,15 +9,18 @@ namespace Interstellar
         private readonly AggregateFactory aggregateFactory;
         private readonly EventStreamLoader eventStreamLoader;
         private readonly IEventStore eventStore;
+        private readonly AggregateLookup aggregateLookup;
 
         public DomainCommandDeliverer(
             AggregateFactory aggregateFactory,
             EventStreamLoader eventStreamLoader,
-            IEventStore eventStore)
+            IEventStore eventStore, 
+            AggregateLookup aggregateLookup)
         {
             this.aggregateFactory = aggregateFactory;
             this.eventStreamLoader = eventStreamLoader;
             this.eventStore = eventStore;
+            this.aggregateLookup = aggregateLookup;
         }
 
         public Task DeliverCommandAsync<TCommand>(TCommand command, IDictionary<string, object> headers)
@@ -39,9 +42,7 @@ namespace Interstellar
 
         private AggregateResolution ResolveAggregate<TCommand>(TCommand command)
         {
-            return AggregateLookupContext
-                .Current
-                .ResolveToAggregate(command, aggregateFactory);
+            return aggregateLookup.ResolveToAggregate(command, aggregateFactory);
         }
 
         private async Task StoreEvents<TCommand>(TCommand command, int attempts, UnitOfWork uow)

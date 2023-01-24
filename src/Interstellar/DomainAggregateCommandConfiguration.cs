@@ -13,7 +13,7 @@ namespace Interstellar
 
         public DomainAggregateCommandConfiguration<TAggregate, TAggregateState, TCommand> JoinWithOtherStreams(params Func<TCommand, string>[] otherStreamIdFactories)
         {
-            AggregateLookupContext.Current.SetAggregateToLookUpWithJoinedStreams(otherStreamIdFactories);
+            AggregateLookup.SetAggregateToLookUpWithJoinedStreams(otherStreamIdFactories);
             return this;
         }
     }

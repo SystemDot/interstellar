@@ -13,16 +13,19 @@ namespace Interstellar
             MessageNameTypeLookup lookup)
             where TEventDeliverer : class, IEventDeliverer
         {
+
+            var aggregateLookup = new AggregateLookup();
+            var domainConfiguration = new DomainConfiguration(services, aggregateLookup);
+            configureAction(domainConfiguration);
+
             services
+                .AddSingleton(aggregateLookup)
                 .AddSingleton<IEventDeliverer, TEventDeliverer>()
                 .AddSingleton<IServiceProvider>(sp => sp)
                 .AddSingleton(lookup)
                 .AddSingleton<AggregateFactory>()
                 .AddSingleton<EventStreamLoader>()
                 .AddSingleton<DomainCommandDeliverer>();
-
-            var domainConfiguration = new DomainConfiguration(services);
-            configureAction(domainConfiguration);
 
             return services;
         }

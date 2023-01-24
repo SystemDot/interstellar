@@ -1,6 +1,7 @@
 ﻿namespace Interstellar.Tests.Unit;
 
 using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 public class AggregateLookupTests
@@ -8,8 +9,8 @@ public class AggregateLookupTests
     [Fact]
     public void CommandsReceivedByAggregateReportCorrectly()
     {
-        ServicesBuilder.BuildServices();
-        AggregateLookup aggregateLookup = AggregateLookupContext.Current;
+        ServiceProvider services = ServicesBuilder.BuildServices();
+        AggregateLookup aggregateLookup = services.GetService<AggregateLookup>()!;
         aggregateLookup.CommandIsReceivedByAnAggregate<TestStateOneCommand>().Should().BeTrue();
         aggregateLookup.CommandIsReceivedByAnAggregate<TestStateTwoCommand>().Should().BeTrue();
         aggregateLookup.CommandIsReceivedByAnAggregate<TestStateThreeCommand>().Should().BeTrue();

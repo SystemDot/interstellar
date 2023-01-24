@@ -6,7 +6,7 @@ namespace Interstellar.Configuration
         where TAggregate : AggregateRoot<TAggregateState>
         where TAggregateState : AggregateState, new()
     {
-        public DomainAggregateConfiguration(DomainConfiguration parent) : base(parent.Services)
+        public DomainAggregateConfiguration(DomainConfiguration parent) : base(parent.Services, parent.AggregateLookup)
         {
         }
 
@@ -14,7 +14,7 @@ namespace Interstellar.Configuration
             Func<TCommand, string> streamIdFactory)
             where TCommand : class
         {
-            AggregateLookupContext.Current.RegisterCommandForAggregateReception<TAggregate, TAggregateState, TCommand>(streamIdFactory);
+            AggregateLookup.RegisterCommandForAggregateReception<TAggregate, TAggregateState, TCommand>(streamIdFactory);
             return new DomainAggregateCommandConfiguration<TAggregate, TAggregateState, TCommand>(this);
         }
     }

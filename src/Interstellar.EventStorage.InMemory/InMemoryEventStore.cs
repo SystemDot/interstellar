@@ -1,23 +1,24 @@
 ﻿namespace Interstellar.EventStorage.InMemory
 {
     using System.Collections.Concurrent;
-    using System.IO;
     using System.Threading.Tasks;
 
     public class InMemoryEventStore : IEventStore
     {
         private readonly ConcurrentDictionary<string, EventStream> inner;
         private readonly IEventDeliverer eventDeliverer;
+        private readonly object locker;
 
         public InMemoryEventStore(IEventDeliverer eventDeliverer)
         {
             this.eventDeliverer = eventDeliverer;
             inner = new ConcurrentDictionary<string, EventStream>();
+            locker = new object();
         }
 
         public Task<EventStream> GetEventsAsync(string streamId)
         {
-            lock (streamId)
+            lock (locker)
             {
                 CreateStreamIfNonExistent(streamId);
                 return Task.FromResult(inner[streamId]);
@@ -26,7 +27,7 @@
 
         public Task StoreEventsAsync(EventStreamSlice toStore)
         {
-            lock (toStore.StreamId)
+            lock (locker)
             {
                 CreateStreamIfNonExistent(toStore.StreamId);
                 var eventStream = inner[toStore.StreamId];

@@ -33,7 +33,8 @@
                     .ThenBy(e => e.EventIndex);
             }
 
-            return result;
+            return result
+                .OrderBy(e => e.EventIndex);
         }
     }
 }
