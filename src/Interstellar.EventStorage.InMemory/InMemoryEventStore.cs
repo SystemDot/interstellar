@@ -37,7 +37,12 @@
 
             return eventDeliverer.DeliverEventsAsync(toStore);
         }
-        
+
+        public Task RedeliverAllEventsAsync()
+        {
+            throw new System.NotImplementedException();
+        }
+
         private void CheckExpectedEventIndex(EventStreamSlice toStore, long expectedIndex)
         {
             if (expectedIndex != toStore.StartIndex)

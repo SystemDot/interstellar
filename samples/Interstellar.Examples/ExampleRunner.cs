@@ -5,10 +5,12 @@ namespace Interstellar.Examples;
 public class ExampleRunner
 {
     private readonly MessageBus domainCommandDeliverer;
+    private readonly IEventStore eventStore;
 
-    public ExampleRunner(MessageBus domainCommandDeliverer)
+    public ExampleRunner(MessageBus domainCommandDeliverer, IEventStore eventStore)
     {
         this.domainCommandDeliverer = domainCommandDeliverer;
+        this.eventStore = eventStore;
     }
 
     public async Task RunAsync()
@@ -30,5 +32,10 @@ public class ExampleRunner
         await domainCommandDeliverer.SendCommandAsync(new StartWotsit(wotsitId, thingId));
         await domainCommandDeliverer.SendCommandAsync(new MakeWotsit(wotsitId, thingId, 50));
         await domainCommandDeliverer.SendCommandAsync(new DestroyWotsit(wotsitId, thingId));
+    }
+
+    public async Task ReRunAsync()
+    {
+        await eventStore.RedeliverAllEventsAsync();
     }
 }

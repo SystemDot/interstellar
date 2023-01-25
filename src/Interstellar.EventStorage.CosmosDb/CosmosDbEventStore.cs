@@ -26,9 +26,19 @@ public class CosmosDbEventStore : IEventStore
 
     public async Task<EventStream> GetEventsAsync(string streamId)
     {
+        var events = new List<EventPayload>();
+        
         Container container = await GetContainerAsync();
-        var queryResultSetIterator = GetQueryResultSetIterator(streamId, container);
-        var events = await GetEventPayloadsFromQueryIterator(queryResultSetIterator);
+        var queryResultSetIterator = GetEventsByStreamIterator(streamId, container);
+        
+        await PerformEventPayloadQueryIterationAction(
+            queryResultSetIterator, 
+            @event =>
+            {
+                events.Add(@event);
+                return Task.CompletedTask;
+            });
+
         return new EventStream(events);
     }
 
@@ -38,6 +48,16 @@ public class CosmosDbEventStore : IEventStore
         
         await WriteEventsAsync(toStore, container);
         await immediateEventDispatcher.DispatchEventsAsync(toStore);
+    }
+
+    public async Task RedeliverAllEventsAsync()
+    {
+        Container container = await GetContainerAsync();
+        var queryResultSetIterator = GetAllEventsIterator(container);
+        
+        await PerformEventPayloadQueryIterationAction(
+            queryResultSetIterator, 
+            @event => immediateEventDispatcher.DispatchEventAsync(@event));
     }
 
     private async Task WriteEventsAsync(EventStreamSlice toStore, Container container)
@@ -64,19 +84,25 @@ public class CosmosDbEventStore : IEventStore
         }
     }
 
-    private static FeedIterator<EventPayloadDataItem> GetQueryResultSetIterator(string streamId, Container container)
+    private static FeedIterator<EventPayloadDataItem> GetAllEventsIterator(Container container)
+    {
+        var queryDefinition = new QueryDefinition($"SELECT * FROM c");
+        return container.GetItemQueryIterator<EventPayloadDataItem>(queryDefinition);
+    }
+
+    private static FeedIterator<EventPayloadDataItem> GetEventsByStreamIterator(string streamId, Container container)
     {
         var queryDefinition = new QueryDefinition($"SELECT * FROM c WHERE c.StreamId = '{streamId}'");
         return container.GetItemQueryIterator<EventPayloadDataItem>(queryDefinition);
     }
 
-    private async Task<IEnumerable<EventPayload>> GetEventPayloadsFromQueryIterator(FeedIterator<EventPayloadDataItem> queryResultSetIterator)
+    private async Task PerformEventPayloadQueryIterationAction(
+        FeedIterator<EventPayloadDataItem> iterator,
+        Func<EventPayload, Task> action)
     {
-        var events = new List<EventPayload>();
-
-        while (queryResultSetIterator.HasMoreResults)
+        while (iterator.HasMoreResults)
         {
-            FeedResponse<EventPayloadDataItem>? currentResultSet = await queryResultSetIterator.ReadNextAsync();
+            FeedResponse<EventPayloadDataItem>? currentResultSet = await iterator.ReadNextAsync();
 
             foreach (EventPayloadDataItem? eventPayloadDataItem in currentResultSet)
             {
@@ -84,12 +110,10 @@ public class CosmosDbEventStore : IEventStore
                 {
                     continue;
                 }
-                
-                events.Add(eventPayloadDataItem.ToEventPayload(messageNameTypeLookup));
+
+                await action(eventPayloadDataItem.ToEventPayload(messageNameTypeLookup));
             }
         }
-
-        return events;
     }
 
 

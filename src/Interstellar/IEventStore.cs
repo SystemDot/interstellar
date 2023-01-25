@@ -7,5 +7,7 @@
         Task<EventStream> GetEventsAsync(string streamId);
 
         Task StoreEventsAsync(EventStreamSlice toStore);
+
+        Task RedeliverAllEventsAsync();
     }
 }

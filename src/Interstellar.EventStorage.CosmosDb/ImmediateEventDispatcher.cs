@@ -27,4 +27,6 @@ public class ImmediateEventDispatcher
     
     private Task<Container> GetContainerAsync() =>
         containerProvider.ProvideContainerAsync(PartitionKeys.StreamId);
+
+    public Task DispatchEventAsync(EventPayload @event) => eventDeliverer.DeliverAsync(@event);
 }

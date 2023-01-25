@@ -20,17 +20,29 @@ public static class Program
         while (true)
         {
             Console.WriteLine("Press 1 to run");
+            Console.WriteLine("Press 2 to re-run all events through projections");
             Console.WriteLine("Any other key to exit");
+            
+            var exampleRunner = serviceProvider.GetRequiredService<ExampleRunner>();
 
-            if (Console.ReadKey().Key != ConsoleKey.D1)
+            var consoleKey = Console.ReadKey().Key;
+
+            if (consoleKey == ConsoleKey.D1)
+            {
+                Console.WriteLine("Running");
+                await exampleRunner.RunAsync();
+            }
+            else if (consoleKey == ConsoleKey.D2)
+            {
+                Console.WriteLine("Re-running all events through projections");
+                await exampleRunner.ReRunAsync();
+            }
+            else
             {
                 Console.WriteLine("Exiting");
                 return;
             }
 
-            Console.WriteLine("Running");
-
-            await serviceProvider.GetRequiredService<ExampleRunner>().RunAsync();
         }
     }
 
