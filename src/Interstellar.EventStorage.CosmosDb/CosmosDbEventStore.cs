@@ -1,17 +1,16 @@
 ﻿namespace Interstellar.EventStorage.CosmosDb;
 
 using Microsoft.Azure.Cosmos;
+using Microsoft.Azure.Cosmos.Scripts;
 
 public class CosmosDbEventStore : IEventStore
 {
     private static readonly int ConflictStatusCode = 409;
-
     private readonly IEventSourcingCosmosContainerProvider containerProvider;
     private readonly MessageNameTypeLookup messageNameTypeLookup;
     private readonly ImmediateEventDispatcher immediateEventDispatcher;
     private readonly CosmosDbEventStoreSettings settings;
-
-
+    
     public CosmosDbEventStore(
         IEventSourcingCosmosContainerProvider containerProvider,
         MessageNameTypeLookup messageNameTypeLookup,
@@ -29,7 +28,7 @@ public class CosmosDbEventStore : IEventStore
         var events = new List<EventPayload>();
         
         Container container = await GetContainerAsync();
-        var queryResultSetIterator = GetEventsByStreamIterator(streamId, container);
+        FeedIterator<EventPayloadDataItem> queryResultSetIterator = GetEventsByStreamIterator(streamId, container);
         
         await PerformEventPayloadQueryIterationAction(
             queryResultSetIterator, 
@@ -53,7 +52,7 @@ public class CosmosDbEventStore : IEventStore
     public async Task RedeliverAllEventsAsync()
     {
         Container container = await GetContainerAsync();
-        var queryResultSetIterator = GetAllEventsIterator(container);
+        FeedIterator<EventPayloadDataItem> queryResultSetIterator = GetAllEventsIterator(container);
         
         await PerformEventPayloadQueryIterationAction(
             queryResultSetIterator, 
@@ -64,10 +63,10 @@ public class CosmosDbEventStore : IEventStore
     {
         try
         {
-            var result = await container.Scripts.ExecuteStoredProcedureAsync<int>(
-                StoredProcedures.EventStorage,
-                new PartitionKey(toStore.StreamId),
-                new dynamic[] { toStore.ToEventStreamSliceDataItem(settings.WriteBatchSize) });
+            StoredProcedureExecuteResponse<int>? result = await container.Scripts.ExecuteStoredProcedureAsync<int>(
+              StoredProcedures.EventStorage,
+              new PartitionKey(toStore.StreamId),
+              new dynamic[] { toStore.ToEventStreamSliceDataItem(settings.WriteBatchSize) });
 
             if (result.Resource < toStore.Events.Count())
             {
@@ -80,6 +79,7 @@ public class CosmosDbEventStore : IEventStore
             {
                 throw new ExpectedEventIndexIncorrectException(toStore.StreamId, toStore.StartIndex);
             }
+
             throw;
         }
     }
@@ -115,7 +115,6 @@ public class CosmosDbEventStore : IEventStore
             }
         }
     }
-
 
     private Task<Container> GetContainerAsync() => 
         containerProvider.ProvideContainerAsync(PartitionKeys.StreamId);
